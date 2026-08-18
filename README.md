@@ -5,7 +5,7 @@
 
 AutoPYME diseña agentes de IA a medida — como **Pimienta**, nuestro propio agente — para que cada PYME tenga atención comercial 24/7, cotización automática y registro de cada consulta, sin depender de que una persona esté siempre disponible.
 
-🔗 **Sitio en vivo:** [courageous-marigold-ae442d.netlify.app](https://courageous-marigold-ae442d.netlify.app/)
+🔗 **Sitio en vivo:** [autopymeia.netlify.app](https://autopymeia.netlify.app/)
 💬 **Probar a Pimienta (demo real):** [t.me/Autopim_bot](https://t.me/Autopim_bot)
 
 ---
