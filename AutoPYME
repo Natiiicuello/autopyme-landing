@@ -1,1728 +1,282 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es-AR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <title>AutoPYME · Pimienta IA</title>
-  <meta
-    name="description"
-    content="Probá Pimienta, el agente de IA de AutoPYME que automatiza consultas y presupuestos para PYMEs."
-  >
-
-  <style>
-    :root {
-      --bg: #0b0b0e;
-      --surface: #15151a;
-      --surface-2: #1d1d24;
-      --surface-3: #25252e;
-
-      --primary: #ff5a1f;
-      --primary-light: #ff7a45;
-      --primary-soft: rgba(255, 90, 31, .12);
-
-      --success: #35d07f;
-      --warning: #ffbd4a;
-      --danger: #ff5b5b;
-
-      --text: #f7f7f8;
-      --muted: #9696a3;
-      --border: rgba(255,255,255,.09);
-
-      --radius: 18px;
-      --shadow: 0 20px 60px rgba(0,0,0,.35);
-    }
-
-    * {
-      box-sizing: border-box;
-    }
-
-    html {
-      scroll-behavior: smooth;
-    }
-
-    body {
-      margin: 0;
-      min-height: 100vh;
-      padding: 24px;
-      background:
-        radial-gradient(
-          circle at top,
-          rgba(255, 90, 31, .10),
-          transparent 38%
-        ),
-        var(--bg);
-      color: var(--text);
-      font-family:
-        Inter,
-        ui-sans-serif,
-        -apple-system,
-        BlinkMacSystemFont,
-        "Segoe UI",
-        Roboto,
-        sans-serif;
-    }
-
-    button,
-    textarea {
-      font: inherit;
-    }
-
-    button {
-      -webkit-tap-highlight-color: transparent;
-    }
-
-    .app {
-      width: min(860px, 100%);
-      margin: 0 auto;
-    }
-
-    /* HEADER */
-
-    .header {
-      text-align: center;
-      padding: 24px 0 30px;
-    }
-
-    .logo {
-      width: 64px;
-      height: 64px;
-      margin: 0 auto 18px;
-
-      display: grid;
-      place-items: center;
-
-      font-size: 32px;
-
-      background:
-        linear-gradient(
-          145deg,
-          rgba(255,122,69,.2),
-          rgba(255,90,31,.04)
-        );
-
-      border: 1px solid rgba(255,90,31,.3);
-      border-radius: 20px;
-
-      box-shadow:
-        0 0 40px rgba(255,90,31,.12);
-    }
-
-    .header h1 {
-      margin: 0;
-
-      font-size: clamp(2rem, 6vw, 3rem);
-      line-height: 1.05;
-      letter-spacing: -.045em;
-    }
-
-    .header h1 span {
-      color: var(--primary);
-    }
-
-    .header p {
-      max-width: 620px;
-      margin: 14px auto 0;
-
-      color: var(--muted);
-      font-size: 1rem;
-      line-height: 1.6;
-    }
-
-    .badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 7px;
-
-      margin-top: 20px;
-      padding: 8px 13px;
-
-      color: #ffb092;
-      background: var(--primary-soft);
-
-      border: 1px solid rgba(255,90,31,.25);
-      border-radius: 999px;
-
-      font-size: .8rem;
-      font-weight: 700;
-    }
-
-    .badge::before {
-      content: "";
-      width: 7px;
-      height: 7px;
-
-      background: var(--success);
-      border-radius: 50%;
-
-      box-shadow: 0 0 10px var(--success);
-    }
-
-    /* CARD */
-
-    .demo-card {
-      overflow: hidden;
-
-      background:
-        linear-gradient(
-          180deg,
-          rgba(255,255,255,.025),
-          transparent
-        ),
-        var(--surface);
-
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-
-      box-shadow: var(--shadow);
-    }
-
-    .card-header {
-      padding: 24px 24px 18px;
-
-      border-bottom: 1px solid var(--border);
-    }
-
-    .card-title {
-      margin: 0;
-      font-size: 1rem;
-      font-weight: 700;
-    }
-
-    .card-subtitle {
-      margin: 6px 0 0;
-
-      color: var(--muted);
-      font-size: .85rem;
-    }
-
-    .card-body {
-      padding: 24px;
-    }
-
-    /* PRESETS */
-
-    .presets-title {
-      margin-bottom: 10px;
-
-      color: var(--muted);
-      font-size: .78rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: .06em;
-    }
-
-    .presets {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 10px;
-
-      margin-bottom: 18px;
-    }
-
-    .preset {
-      min-height: 76px;
-      padding: 12px;
-
-      text-align: left;
-
-      color: var(--text);
-      background: var(--surface-2);
-
-      border: 1px solid var(--border);
-      border-radius: 12px;
-
-      cursor: pointer;
-
-      transition:
-        transform .2s ease,
-        border-color .2s ease,
-        background .2s ease;
-    }
-
-    .preset:hover {
-      transform: translateY(-2px);
-      background: var(--surface-3);
-      border-color: rgba(255,90,31,.45);
-    }
-
-    .preset:focus-visible,
-    .main-button:focus-visible,
-    .secondary-button:focus-visible,
-    .close-button:focus-visible {
-      outline: 2px solid var(--primary-light);
-      outline-offset: 3px;
-    }
-
-    .preset-icon {
-      display: block;
-      margin-bottom: 6px;
-      font-size: 1.1rem;
-    }
-
-    .preset strong {
-      display: block;
-      font-size: .78rem;
-    }
-
-    .preset small {
-      display: block;
-      margin-top: 3px;
-
-      color: var(--muted);
-      font-size: .68rem;
-    }
-
-    /* INPUT */
-
-    .input-wrapper {
-      position: relative;
-    }
-
-    textarea {
-      width: 100%;
-      min-height: 120px;
-
-      padding: 16px 17px 42px;
-
-      color: var(--text);
-      background: #0e0e12;
-
-      border: 1px solid var(--border);
-      border-radius: 14px;
-
-      resize: vertical;
-
-      outline: none;
-
-      line-height: 1.5;
-
-      transition:
-        border-color .2s ease,
-        box-shadow .2s ease;
-    }
-
-    textarea::placeholder {
-      color: #666672;
-    }
-
-    textarea:focus {
-      border-color: rgba(255,90,31,.65);
-
-      box-shadow:
-        0 0 0 4px rgba(255,90,31,.08);
-    }
-
-    .char-counter {
-      position: absolute;
-      right: 13px;
-      bottom: 11px;
-
-      color: #60606b;
-      font-size: .7rem;
-    }
-
-    /* BUTTON */
-
-    .main-button {
-      position: relative;
-
-      width: 100%;
-      margin-top: 12px;
-      padding: 15px 20px;
-
-      color: white;
-
-      background:
-        linear-gradient(
-          135deg,
-          var(--primary),
-          #f0440b
-        );
-
-      border: 0;
-      border-radius: 12px;
-
-      font-weight: 800;
-      cursor: pointer;
-
-      box-shadow:
-        0 8px 25px rgba(255,90,31,.18);
-
-      transition:
-        transform .2s ease,
-        box-shadow .2s ease,
-        filter .2s ease;
-    }
-
-    .main-button:hover {
-      transform: translateY(-1px);
-
-      box-shadow:
-        0 12px 32px rgba(255,90,31,.25);
-    }
-
-    .main-button:active {
-      transform: translateY(0);
-    }
-
-    .main-button.loading {
-      pointer-events: none;
-      opacity: .8;
-    }
-
-    /* OUTPUT */
-
-    .output {
-      margin-top: 18px;
-      padding: 20px;
-
-      background: #0e0e12;
-
-      border: 1px solid var(--border);
-      border-radius: 14px;
-
-      animation: appear .35s ease;
-    }
-
-    @keyframes appear {
-      from {
-        opacity: 0;
-        transform: translateY(8px);
-      }
-
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    .hidden {
-      display: none !important;
-    }
-
-    /* LOADING */
-
-    .loading {
-      padding: 20px 0;
-      text-align: center;
-    }
-
-    .spinner {
-      width: 34px;
-      height: 34px;
-
-      margin: 0 auto 14px;
-
-      border: 3px solid rgba(255,255,255,.08);
-      border-top-color: var(--primary);
-
-      border-radius: 50%;
-
-      animation: spin .8s linear infinite;
-    }
-
-    @keyframes spin {
-      to {
-        transform: rotate(360deg);
-      }
-    }
-
-    .loading-text {
-      margin: 0;
-
-      color: var(--muted);
-      font-size: .82rem;
-    }
-
-    /* RESULT */
-
-    .result-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-
-      margin-bottom: 18px;
-    }
-
-    .agent {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .agent-avatar {
-      width: 38px;
-      height: 38px;
-
-      display: grid;
-      place-items: center;
-
-      background: var(--primary-soft);
-
-      border: 1px solid rgba(255,90,31,.25);
-      border-radius: 11px;
-    }
-
-    .agent-name {
-      font-size: .85rem;
-      font-weight: 800;
-    }
-
-    .agent-status {
-      margin-top: 2px;
-
-      color: var(--success);
-      font-size: .68rem;
-    }
-
-    .ai-pill {
-      padding: 5px 8px;
-
-      color: #ffab8c;
-      background: var(--primary-soft);
-
-      border-radius: 7px;
-
-      font-size: .65rem;
-      font-weight: 800;
-    }
-
-    .quote {
-      padding: 16px;
-
-      background: var(--surface);
-
-      border: 1px solid var(--border);
-      border-radius: 12px;
-
-      line-height: 1.65;
-      font-size: .88rem;
-    }
-
-    .quote-items {
-      margin: 14px 0;
-      padding: 0;
-
-      list-style: none;
-    }
-
-    .quote-item {
-      display: flex;
-      justify-content: space-between;
-      gap: 15px;
-
-      padding: 9px 0;
-
-      border-bottom: 1px solid var(--border);
-
-      color: #d9d9df;
-    }
-
-    .quote-item:last-child {
-      border-bottom: 0;
-    }
-
-    .quote-total {
-      display: flex;
-      justify-content: space-between;
-
-      margin-top: 14px;
-      padding-top: 14px;
-
-      border-top: 1px solid var(--border);
-
-      font-size: 1rem;
-      font-weight: 800;
-    }
-
-    .total-price {
-      color: var(--primary-light);
-    }
-
-    .success-message {
-      margin-top: 14px;
-      padding: 10px 12px;
-
-      color: #9de7be;
-      background: rgba(53,208,127,.08);
-
-      border: 1px solid rgba(53,208,127,.15);
-      border-radius: 9px;
-
-      font-size: .75rem;
-    }
-
-    /* COPY */
-
-    .copy-button {
-      width: 100%;
-      margin-top: 12px;
-      padding: 11px;
-
-      color: var(--text);
-      background: var(--surface-2);
-
-      border: 1px solid var(--border);
-      border-radius: 10px;
-
-      cursor: pointer;
-
-      font-weight: 700;
-
-      transition: .2s ease;
-    }
-
-    .copy-button:hover {
-      border-color: var(--primary);
-      background: var(--primary-soft);
-    }
-
-    /* WORKFLOW */
-
-    .workflow {
-      margin-top: 20px;
-      padding-top: 18px;
-
-      border-top: 1px dashed var(--border);
-    }
-
-    .workflow-title {
-      margin: 0 0 12px;
-
-      color: var(--muted);
-
-      font-size: .7rem;
-      font-weight: 800;
-      letter-spacing: .07em;
-      text-transform: uppercase;
-    }
-
-    .steps {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 8px;
-
-      list-style: none;
-      padding: 0;
-      margin: 0;
-    }
-
-    .step {
-      padding: 10px 7px;
-
-      text-align: center;
-
-      color: #666672;
-      background: var(--surface-2);
-
-      border: 1px solid transparent;
-      border-radius: 8px;
-
-      font-size: .67rem;
-
-      transition: .3s ease;
-    }
-
-    .step.active {
-      color: var(--text);
-
-      background: var(--primary-soft);
-
-      border-color: rgba(255,90,31,.4);
-
-      box-shadow:
-        0 0 20px rgba(255,90,31,.07);
-    }
-
-    .step.done {
-      color: var(--success);
-      border-color: rgba(53,208,127,.2);
-      background: rgba(53,208,127,.06);
-    }
-
-    /* BOTTOM */
-
-    .bottom-actions {
-      margin-top: 16px;
-    }
-
-    .secondary-button {
-      width: 100%;
-      padding: 12px;
-
-      color: var(--primary-light);
-      background: transparent;
-
-      border: 1px solid rgba(255,90,31,.4);
-      border-radius: 11px;
-
-      font-weight: 800;
-      cursor: pointer;
-
-      transition: .2s ease;
-    }
-
-    .secondary-button:hover {
-      background: var(--primary-soft);
-    }
-
-    .disclaimer {
-      margin: 15px 0 0;
-
-      color: #5f5f6b;
-      text-align: center;
-
-      font-size: .68rem;
-      line-height: 1.5;
-    }
-
-    /* MODAL */
-
-    .modal {
-      position: fixed;
-      inset: 0;
-      z-index: 1000;
-
-      display: grid;
-      place-items: center;
-
-      padding: 20px;
-
-      background: rgba(0,0,0,.78);
-      backdrop-filter: blur(8px);
-    }
-
-    .modal-content {
-      position: relative;
-
-      width: min(620px, 100%);
-      max-height: 90vh;
-      overflow-y: auto;
-
-      padding: 26px;
-
-      background: var(--surface);
-
-      border: 1px solid var(--border);
-      border-radius: 18px;
-
-      box-shadow: var(--shadow);
-
-      animation: modalIn .25s ease;
-    }
-
-    @keyframes modalIn {
-      from {
-        opacity: 0;
-        transform: scale(.97) translateY(10px);
-      }
-
-      to {
-        opacity: 1;
-        transform: scale(1) translateY(0);
-      }
-    }
-
-    .modal-header {
-      padding-right: 35px;
-    }
-
-    .modal-header h2 {
-      margin: 0;
-      font-size: 1.25rem;
-    }
-
-    .modal-header p {
-      margin: 7px 0 0;
-
-      color: var(--muted);
-      font-size: .82rem;
-      line-height: 1.5;
-    }
-
-    .close-button {
-      position: absolute;
-      top: 15px;
-      right: 17px;
-
-      width: 34px;
-      height: 34px;
-
-      display: grid;
-      place-items: center;
-
-      color: var(--muted);
-      background: var(--surface-2);
-
-      border: 0;
-      border-radius: 9px;
-
-      cursor: pointer;
-
-      font-size: 20px;
-    }
-
-    .ocfe-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 10px;
-
-      margin-top: 20px;
-    }
-
-    .ocfe-card {
-      padding: 15px;
-
-      background: var(--surface-2);
-
-      border: 1px solid var(--border);
-      border-left: 3px solid var(--primary);
-
-      border-radius: 10px;
-    }
-
-    .ocfe-card strong {
-      font-size: .82rem;
-    }
-
-    .ocfe-card p {
-      margin: 6px 0 0;
-
-      color: var(--muted);
-      font-size: .75rem;
-      line-height: 1.5;
-    }
-
-    /* MOBILE */
-
-    @media (max-width: 650px) {
-      body {
-        padding: 12px;
-      }
-
-      .header {
-        padding: 18px 8px 24px;
-      }
-
-      .header h1 {
-        font-size: 2rem;
-      }
-
-      .card-body {
-        padding: 18px;
-      }
-
-      .card-header {
-        padding: 20px 18px 16px;
-      }
-
-      .presets {
-        grid-template-columns: 1fr;
-      }
-
-      .preset {
-        min-height: auto;
-      }
-
-      .steps {
-        grid-template-columns: repeat(2, 1fr);
-      }
-
-      .ocfe-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .quote-item {
-        flex-direction: column;
-        gap: 3px;
-      }
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      *,
-      *::before,
-      *::after {
-        animation-duration: .01ms !important;
-        animation-iteration-count: 1 !important;
-        transition-duration: .01ms !important;
-        scroll-behavior: auto !important;
-      }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AutoPYME — Inteligencia Artificial con Pimienta</title>
+<meta name="description" content="Conocé a Pimienta, la agente de IA de AutoPYME, y descubrí cómo creamos un agente 100% personalizado para tu negocio: atención 24/7, cotización en $ARS y registro en Google Sheets.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="AutoPYME — Inteligencia Artificial con Pimienta">
+<meta property="og:description" content="Tu empresa nunca cierra con tu propio agente de IA al frente: atención comercial 24/7, cotización automática en $ARS y registro en Google Sheets para PYMEs argentinas.">
+<meta property="og:image" content="https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=https://t.me/Autopim_bot">
+<meta property="og:locale" content="es_AR">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="AutoPYME — Inteligencia Artificial con Pimienta">
+<meta name="twitter:description" content="Tu empresa nunca cierra con tu propio agente de IA al frente: atención 24/7, cotización en $ARS y registro automático en Sheets.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='46' fill='%2308060D'/%3E%3Ccircle cx='50' cy='50' r='46' fill='none' stroke='%23c77dff' stroke-width='4'/%3E%3Ctext x='50' y='66' font-size='56' text-anchor='middle' fill='%23c77dff'%3EP%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink: #08060D;
+    --ink-2: #100C1B;
+    --ink-3: #181129;
+    --violet: #9d4edf;
+    --violet-bright: #c77dff;
+    --violet-soft: #e0aaff;
+    --mint: #b5179e;
+    --text: #F3EEFE;
+    --text-muted: #9D8ec4;
+    --line: rgba(157, 78, 223, 0.18);
+    --radius: 14px;
+    --serif: 'Fraunces', serif;
+    --sans: 'Inter', sans-serif;
+    --mono: 'IBM Plex Mono', monospace;
+  }
+
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--ink);
+    color:var(--text);
+    font-family:var(--sans);
+    line-height:1.5;
+    overflow-x:hidden;
+  }
+  a{color:inherit; text-decoration:none;}
+  img,svg{display:block; max-width:100%;}
+  section{position:relative; padding:120px 24px;}
+  .wrap{max-width:1120px; margin:0 auto;}
+  .eyebrow{
+    font-family:var(--mono);
+    font-size:12.5px;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--violet-bright);
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-bottom:18px;
+  }
+  .eyebrow::before{
+    content:'';
+    width:7px; height:7px; border-radius:50%;
+    background:var(--violet-bright);
+    box-shadow:0 0 10px var(--violet-bright);
+  }
+  h1,h2,h3{font-family:var(--serif); font-weight:600; letter-spacing:-0.01em;}
+  h2{font-size:clamp(30px,4vw,44px); line-height:1.12;}
+  p{color:var(--text-muted);}
+  .lede{font-size:18px; max-width:620px;}
+
+  /* ===== NAV ===== */
+  nav{
+    position:fixed; top:0; left:0; right:0; z-index:100;
+    padding:20px 24px;
+    background:rgba(8, 6, 13, 0.85);
+    backdrop-filter:blur(14px);
+    border-bottom:1px solid var(--line);
+  }
+  nav .wrap{display:flex; align-items:center; justify-content:space-between;}
+  .logo{
+    font-family:var(--serif); font-weight:700; font-size:21px;
+    display:flex; align-items:center; gap:9px;
+    letter-spacing:-0.01em;
+  }
+  .logo .dot{width:8px;height:8px;border-radius:50%;background:var(--violet-bright); box-shadow:0 0 12px var(--violet-bright);}
+  nav ul{display:flex; gap:34px; list-style:none;}
+  nav ul a{font-size:14.5px; color:var(--text-muted); transition:color .2s;}
+  nav ul a:hover{color:var(--text);}
+
+  /* ===== BOTÓN FLOTANTE ===== */
+  .fab{
+    position:fixed; bottom:26px; right:26px; z-index:80;
+    width:60px; height:60px; border-radius:50%;
+    background:linear-gradient(135deg, var(--violet), #7b2fb5);
+    display:flex; align-items:center; justify-content:center;
+    font-size:26px; text-decoration:none; color:#fff;
+    box-shadow:0 10px 30px rgba(157,78,223,.45);
+    animation:fabPulse 2.6s infinite;
+    transition:transform .2s;
+  }
+  .fab:hover{transform:scale(1.08);}
+  @keyframes fabPulse{
+    0%{box-shadow:0 10px 30px rgba(157,78,223,.45), 0 0 0 0 rgba(157,78,223,.45);}
+    70%{box-shadow:0 10px 30px rgba(157,78,223,.45), 0 0 0 14px rgba(157,78,223,0);}
+    100%{box-shadow:0 10px 30px rgba(157,78,223,.45), 0 0 0 0 rgba(157,78,223,0);}
+  }
+  @media(prefers-reduced-motion: reduce){ .fab{animation:none;} }
+  @media(max-width:600px){ .fab{width:52px; height:52px; font-size:21px; bottom:18px; right:18px;} }
+  .nav-burger{
+    display:none;
+    background:none; border:1px solid var(--line); border-radius:8px;
+    width:40px; height:40px;
+    align-items:center; justify-content:center;
+    cursor:pointer; flex-direction:column; gap:5px;
+  }
+  .nav-burger span{display:block; width:18px; height:2px; background:var(--text); transition:transform .2s, opacity .2s;}
+  .nav-burger[aria-expanded="true"] span:nth-child(1){transform:translateY(7px) rotate(45deg);}
+  .nav-burger[aria-expanded="true"] span:nth-child(2){opacity:0;}
+  .nav-burger[aria-expanded="true"] span:nth-child(3){transform:translateY(-7px) rotate(-45deg);}
+  @media(max-width:820px){
+    .nav-burger{display:flex;}
+    nav ul{
+      display:flex; flex-direction:column; gap:0;
+      position:fixed; top:73px; left:0; right:0;
+      background:var(--ink-2);
+      border-bottom:1px solid var(--line);
+      max-height:0; overflow:hidden;
+      transition:max-height .25s ease;
+    }
+    nav.menu-open ul{max-height:420px;}
+    nav ul li{width:100%;}
+    nav ul a{display:block; padding:16px 24px; border-top:1px solid var(--line); font-size:15.5px;}
+  }
+
+  /* ===== HERO ===== */
+  .hero{
+    padding-top:180px;
+    min-height:88vh;
+  }
+  .hero::before{
+    content:'';
+    position:absolute; inset:0;
+    background:
+      radial-gradient(700px 500px at 85% 10%, rgba(157, 78, 223, 0.25), transparent 70%),
+      radial-gradient(600px 450px at 5% 85%, rgba(181, 23, 158, 0.15), transparent 70%);
+    pointer-events:none;
+  }
+  .hero h1{
+    font-size:clamp(38px,5.4vw,64px);
+    line-height:1.05;
+    margin-bottom:22px;
+  }
+  .hero h1 em{
+    font-style:italic; color:var(--violet-soft); font-weight:500;
+    text-shadow: 0 0 20px rgba(224, 170, 255, 0.3);
+  }
+  .hero .lede{margin-bottom:34px; font-size:17.5px;}
+  .hero-actions{display:flex; gap:14px; flex-wrap:wrap; margin-bottom:40px;}
+  .btn{
+    font-family:var(--sans); font-weight:600; font-size:15px;
+    padding:14px 26px; border-radius:10px;
+    display:inline-flex; align-items:center; gap:8px;
+    transition:all .2s;
+  }
+  .btn-primary{
+    background:linear-gradient(135deg, var(--violet) 0%, var(--mint) 100%);
+    color:#ffffff;
+    box-shadow: 0 4px 20px rgba(157, 78, 223, 0.4);
+  }
+  .btn-primary:hover{
+    transform:translateY(-2px);
+    box-shadow: 0 6px 25px rgba(199, 125, 255, 0.6);
+  }
+  .btn-ghost{border:1px solid var(--line); color:var(--text); background: rgba(16, 12, 27, 0.6);}
+  .btn-ghost:hover{border-color:var(--violet-bright); background: rgba(157, 78, 223, 0.15);}
+
+  .trust-row{display:flex; gap:28px; flex-wrap:wrap;}
+  .trust-row .num{font-family:var(--serif); font-size:26px; color:var(--text); display:block;}
+  .trust-row .lbl{font-size:12.5px; color:var(--text-muted); font-family:var(--mono);}
+
+  /* Section Head */
+  .sec-head{max-width:640px; margin-bottom:56px;}
+
+  /* ===== STATS BAND (Con la mejora integrada) ===== */
+  .stats-band{
+    background:var(--ink-2);
+    border:1px solid var(--line); border-radius:20px;
+    display:grid; grid-template-columns:repeat(4,1fr);
+    padding:48px 20px;
+    box-shadow: 0 0 30px rgba(157, 78, 223, 0.1);
+  }
+  .stat{text-align:center; border-right:1px solid var(--line);}
+  .stat:last-child{border-right:none;}
+  .stat .big{
+    font-family:var(--serif); 
+    font-size:clamp(30px,3.6vw,42px); 
+    color:var(--violet-soft); 
+    text-shadow: 0 0 15px rgba(224, 170, 255, 0.3);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .stat-icon{
+    font-size: 22px;
+    margin-bottom: 6px;
+    display: block;
+    filter: drop-shadow(0 0 5px var(--violet-bright));
+  }
+  .stat .cap{font-family:var(--mono); font-size:12px; color:var(--text-muted); margin-top:6px;}
+  @media(max-width:760px){.stats-band{grid-template-columns:1fr 1fr; gap:28px 0;} .stat{border-right:none; border-bottom:1px solid var(--line); padding-bottom:20px;} .stat:nth-child(2n){border-right:none;}}
+
+  footer{padding:56px 24px 32px; border-top:1px solid var(--line); background: var(--ink);}
+  footer .wrap{display:flex; justify-content:space-between; flex-wrap:wrap; gap:24px;}
+  footer .fcol h4{font-family:var(--mono); font-size:11px; text-transform:uppercase; letter-spacing:.1em; color:var(--text-muted); margin-bottom:14px;}
+  footer .fcol a{display:block; font-size:14px; color:var(--text); margin-bottom:8px; opacity:.85;}
+  footer .fcol a:hover{opacity:1; color:var(--violet-bright);}
+  footer .bottom{margin-top:48px; padding-top:24px; border-top:1px solid var(--line); font-family:var(--mono); font-size:11.5px; color:var(--text-muted); display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px;}
+</style>
 </head>
-
 <body>
 
-<main class="app">
-
-  <header class="header">
-
-    <div class="logo" aria-hidden="true">
-      🌶️
-    </div>
-
-    <h1>
-      Agente <span>Pimienta</span>
-    </h1>
-
-    <p>
-      Tu agente de IA para atender consultas, preparar presupuestos
-      y registrar pedidos automáticamente, 24/7.
-    </p>
-
-    <div class="badge">
-      Demo interactiva de AutoPYME
-    </div>
-
-  </header>
-
-
-  <section class="demo-card" aria-labelledby="demo-title">
-
-    <div class="card-header">
-
-      <h2 class="card-title" id="demo-title">
-        Probá cómo respondería Pimienta
-      </h2>
-
-      <p class="card-subtitle">
-        Escribí un pedido real o elegí uno de nuestros escenarios.
-      </p>
-
-    </div>
-
-
-    <div class="card-body">
-
-      <div class="presets-title">
-        Escenarios de prueba
-      </div>
-
-      <div class="presets">
-
-        <button
-          class="preset"
-          type="button"
-          data-preset="pedido"
-        >
-          <span class="preset-icon">📦</span>
-          <strong>Pedido mayorista</strong>
-          <small>Productos + cantidades</small>
-        </button>
-
-        <button
-          class="preset"
-          type="button"
-          data-preset="horario"
-        >
-          <span class="preset-icon">🌙</span>
-          <strong>Consulta nocturna</strong>
-          <small>Fuera de horario</small>
-        </button>
-
-        <button
-          class="preset"
-          type="button"
-          data-preset="ambiguo"
-        >
-          <span class="preset-icon">❓</span>
-          <strong>Consulta informal</strong>
-          <small>Jerga + IVA + envío</small>
-        </button>
-
-      </div>
-
-
-      <div class="input-wrapper">
-
-        <textarea
-          id="demoInput"
-          maxlength="500"
-          aria-label="Consulta para Pimienta"
-          placeholder="Ej: Hola, necesito 20 cajas de aceite y 10 paquetes de yerba. ¿Me pasás precio mayorista?"
-        ></textarea>
-
-        <span
-          class="char-counter"
-          id="charCounter"
-        >
-          0/500
-        </span>
-
-      </div>
-
-
-      <button
-        class="main-button"
-        id="generateButton"
-        type="button"
-      >
-        🌶️ Generar respuesta con Pimienta
-      </button>
-
-
-      <div
-        id="demoOutput"
-        class="output hidden"
-        aria-live="polite"
-      >
-
-        <div
-          id="loadingState"
-          class="loading hidden"
-        >
-
-          <div class="spinner"></div>
-
-          <p
-            class="loading-text"
-            id="loadingText"
-          >
-            Analizando consulta...
-          </p>
-
-        </div>
-
-
-        <div id="resultContent"></div>
-
-
-        <button
-          id="copyButton"
-          class="copy-button hidden"
-          type="button"
-        >
-          📋 Copiar respuesta para WhatsApp
-        </button>
-
-
-        <div
-          id="workflow"
-          class="workflow hidden"
-        >
-
-          <p class="workflow-title">
-            Flujo automatizado
-          </p>
-
-          <ul class="steps">
-
-            <li class="step" id="step1">
-              1. Webhook
-            </li>
-
-            <li class="step" id="step2">
-              2. IA + OCFE
-            </li>
-
-            <li class="step" id="step3">
-              3. Catálogo RAG
-            </li>
-
-            <li class="step" id="step4">
-              4. Google Sheets
-            </li>
-
-          </ul>
-
-        </div>
-
-      </div>
-
-
-      <div class="bottom-actions">
-
-        <button
-          class="secondary-button"
-          id="ocfeButton"
-          type="button"
-        >
-          🧠 Ver cómo piensa Pimienta
-        </button>
-
-        <p class="disclaimer">
-          Esta demo simula el flujo de automatización.
-          En producción, Pimienta se conecta al catálogo y las herramientas
-          reales de cada empresa.
-        </p>
-
-      </div>
-
-    </div>
-
-  </section>
-
-</main>
-
-
-<!-- MODAL -->
-
-<div
-  class="modal hidden"
-  id="ocfeModal"
-  role="dialog"
-  aria-modal="true"
-  aria-labelledby="modalTitle"
->
-
-  <div class="modal-content">
-
-    <button
-      class="close-button"
-      id="closeModal"
-      type="button"
-      aria-label="Cerrar"
-    >
-      ×
-    </button>
-
-    <div class="modal-header">
-
-      <h2 id="modalTitle">
-        🧠 Cómo piensa Pimienta
-      </h2>
-
-      <p>
-        La arquitectura OCFE organiza las reglas que utiliza el agente
-        para responder de forma consistente y reducir errores.
-      </p>
-
-    </div>
-
-
-    <div class="ocfe-grid">
-
-      <article class="ocfe-card">
-
-        <strong>[O] Objetivos</strong>
-
-        <p>
-          Calificar el lead, interpretar el pedido y preparar
-          una cotización clara.
-        </p>
-
-      </article>
-
-
-      <article class="ocfe-card">
-
-        <strong>[C] Contexto</strong>
-
-        <p>
-          Catálogo, precios, disponibilidad, reglas comerciales
-          y tono de comunicación de la empresa.
-        </p>
-
-      </article>
-
-
-      <article class="ocfe-card">
-
-        <strong>[F] Formato</strong>
-
-        <p>
-          Respuestas estructuradas con productos, cantidades,
-          precios, impuestos y próximos pasos.
-        </p>
-
-      </article>
-
-
-      <article class="ocfe-card">
-
-        <strong>[E] Excepciones</strong>
-
-        <p>
-          Si un dato no existe o no hay stock, el agente no lo inventa:
-          deriva el caso a una persona.
-        </p>
-
-      </article>
-
-    </div>
-
+<nav id="siteNav" aria-label="Navegación principal">
+  <div class="wrap">
+    <div class="logo"><span class="dot"></span>AutoPYME</div>
+    <ul id="navList">
+      <li><a href="#numeros">Resultados</a></li>
+    </ul>
   </div>
-
-</div>
-
-
-<script>
-
-  /* =========================
-     CONFIGURACIÓN
-  ========================= */
-
-  const presets = {
-
-    pedido: {
-      text:
-        "Hola! Necesito presupuesto por 15 cajas de aceite de girasol y 8 kg de yerba mate para enviar a Rosario.",
-      type: "pedido"
-    },
-
-    horario: {
-      text:
-        "Buenas noches! ¿Tienen fardos de harina disponibles para entregar mañana a primera hora?",
-      type: "horario"
-    },
-
-    ambiguo: {
-      text:
-        "Che, ¿cuánto me saldrían 20 packs de yerba con IVA y envío?",
-      type: "ambiguo"
-    }
-
-  };
-
-
-  /* =========================
-     ELEMENTOS
-  ========================= */
-
-  const input = document.getElementById("demoInput");
-  const counter = document.getElementById("charCounter");
-
-  const generateButton =
-    document.getElementById("generateButton");
-
-  const output =
-    document.getElementById("demoOutput");
-
-  const loading =
-    document.getElementById("loadingState");
-
-  const loadingText =
-    document.getElementById("loadingText");
-
-  const result =
-    document.getElementById("resultContent");
-
-  const copyButton =
-    document.getElementById("copyButton");
-
-  const workflow =
-    document.getElementById("workflow");
-
-  const modal =
-    document.getElementById("ocfeModal");
-
-  const ocfeButton =
-    document.getElementById("ocfeButton");
-
-  const closeModal =
-    document.getElementById("closeModal");
-
-
-  /* =========================
-     CONTADOR
-  ========================= */
-
-  input.addEventListener("input", () => {
-
-    counter.textContent =
-      `${input.value.length}/500`;
-
-  });
-
-
-  /* =========================
-     PRESETS
-  ========================= */
-
-  document.querySelectorAll("[data-preset]")
-    .forEach(button => {
-
-      button.addEventListener("click", () => {
-
-        const preset =
-          presets[button.dataset.preset];
-
-        input.value = preset.text;
-
-        counter.textContent =
-          `${input.value.length}/500`;
-
-        generarPresupuesto(preset.type);
-
-      });
-
-    });
-
-
-  /* =========================
-     GENERAR
-  ========================= */
-
-  generateButton.addEventListener(
-    "click",
-    () => generarPresupuesto()
-  );
-
-
-  async function generarPresupuesto(type = null) {
-
-    const text =
-      input.value.trim();
-
-    if (!text) {
-
-      input.focus();
-
-      mostrarError(
-        "Escribí una consulta antes de generar la respuesta."
-      );
-
-      return;
-    }
-
-
-    output.classList.remove("hidden");
-
-    loading.classList.remove("hidden");
-
-    result.innerHTML = "";
-
-    copyButton.classList.add("hidden");
-
-    workflow.classList.add("hidden");
-
-    generateButton.classList.add("loading");
-
-    generateButton.textContent =
-      "🌶️ Pimienta está pensando...";
-
-
-    const messages = [
-      "Analizando consulta...",
-      "Consultando catálogo...",
-      "Aplicando reglas comerciales...",
-      "Preparando respuesta..."
-    ];
-
-
-    for (const message of messages) {
-
-      loadingText.textContent = message;
-
-      await esperar(450);
-
-    }
-
-
-    loading.classList.add("hidden");
-
-    generateButton.classList.remove("loading");
-
-    generateButton.textContent =
-      "🌶️ Generar respuesta con Pimienta";
-
-
-    const response =
-      generarRespuesta(text, type);
-
-    result.innerHTML = response;
-
-    copyButton.classList.remove("hidden");
-
-    workflow.classList.remove("hidden");
-
-    animarWorkflow();
-
-  }
-
-
-  /* =========================
-     RESPUESTAS DEMO
-  ========================= */
-
-  function generarRespuesta(text, type) {
-
-    const normalized =
-      text.toLowerCase();
-
-
-    if (
-      type === "horario" ||
-      normalized.includes("buenas noches") ||
-      normalized.includes("23")
-    ) {
-
-      return `
-        <div class="result-header">
-
-          <div class="agent">
-
-            <div class="agent-avatar">
-              🌶️
-            </div>
-
-            <div>
-              <div class="agent-name">
-                Pimienta
-              </div>
-
-              <div class="agent-status">
-                ● Catálogo consultado
-              </div>
-            </div>
-
-          </div>
-
-          <span class="ai-pill">
-            IA
-          </span>
-
-        </div>
-
-        <div class="quote">
-
-          <strong>¡Buenas noches!</strong>
-
-          <p>
-            Sí, tenemos disponibilidad de harina para entrega
-            mañana. Como es fuera del horario comercial, puedo
-            registrar el pedido y dejarlo listo para que el equipo
-            lo confirme a primera hora.
-          </p>
-
-          <div class="success-message">
-            ✓ Consulta registrada automáticamente
-          </div>
-
-        </div>
-      `;
-
-    }
-
-
-    if (
-      type === "ambiguo" ||
-      normalized.includes("packs") ||
-      normalized.includes("yerba")
-    ) {
-
-      const subtotal = 54950;
-      const iva = subtotal * 0.21;
-      const total = subtotal + iva;
-
-      return crearCotizacion({
-        greeting:
-          "¡Dale! Te preparo el presupuesto con IVA incluido.",
-        items: [
-          ["20 × Pack de Yerba Mate 1kg", 54950]
-        ],
-        subtotal,
-        iva,
-        total
-      });
-
-    }
-
-
-    return crearCotizacion({
-      greeting:
-        "¡Hola! Te paso el presupuesto solicitado:",
-      items: [
-        ["15 × Aceite de Girasol 900ml", 27750],
-        ["8 × Yerba Mate 1kg", 27200]
-      ],
-      subtotal: 54950,
-      iva: 54950 * 0.21,
-      total: 54950 * 1.21
-    });
-
-  }
-
-
-  function crearCotizacion({
-    greeting,
-    items,
-    subtotal,
-    iva,
-    total
-  }) {
-
-    return `
-      <div class="result-header">
-
-        <div class="agent">
-
-          <div class="agent-avatar">
-            🌶️
-          </div>
-
-          <div>
-
-            <div class="agent-name">
-              Pimienta
-            </div>
-
-            <div class="agent-status">
-              ● Respuesta generada
-            </div>
-
-          </div>
-
-        </div>
-
-        <span class="ai-pill">
-          IA
-        </span>
-
+</nav>
+
+<section class="hero">
+  <div class="wrap">
+    <div style="max-width:760px;">
+      <div class="eyebrow">Agentes de IA en Argentina · Piloto Automático</div>
+      <h1>Tu empresa <em>nunca cierra</em> con tu propio agente de IA al frente.</h1>
+      <p class="lede">Pimienta es nuestra agente. Para tu negocio creamos un agente propio, entrenado 100% con tu catálogo y tus reglas.</p>
+    </div>
+  </div>
+</section>
+
+<!-- SECCIÓN DE RESULTADOS ACTUALIZADA -->
+<section id="numeros">
+  <div class="wrap">
+    <div class="sec-head" style="margin: 0 auto 48px; text-align: center;">
+      <div class="eyebrow" style="justify-content: center;">Impacto Real</div>
+      <h2>Resultados medibles</h2>
+    </div>
+    <div class="stats-band">
+      <div class="stat">
+        <div class="big"><span class="stat-icon">⚡</span>24/7</div>
+        <div class="cap">TU AGENTE ACTIVO 100%</div>
       </div>
-
-
-      <div class="quote">
-
-        <strong>${greeting}</strong>
-
-
-        <ul class="quote-items">
-
-          ${items.map(([name, price]) => `
-            <li class="quote-item">
-              <span>${name}</span>
-              <strong>
-                $${formatear(price)}
-              </strong>
-            </li>
-          `).join("")}
-
-        </ul>
-
-
-        <div class="quote-item">
-          <span>Subtotal</span>
-          <span>$${formatear(subtotal)}</span>
-        </div>
-
-
-        <div class="quote-item">
-          <span>IVA 21%</span>
-          <span>$${formatear(iva)}</span>
-        </div>
-
-
-        <div class="quote-total">
-
-          <span>
-            Total final
-          </span>
-
-          <span class="total-price">
-            $${formatear(total)}
-          </span>
-
-        </div>
-
-
-        <div class="success-message">
-          ✓ Presupuesto listo para registrar en Google Sheets
-        </div>
-
+      <div class="stat">
+        <div class="big"><span class="stat-icon">⏳</span>+20h</div>
+        <div class="cap">AHORRADAS POR SEMANA</div>
       </div>
-    `;
-
-  }
-
-
-  /* =========================
-     WORKFLOW
-  ========================= */
-
-  function animarWorkflow() {
-
-    const steps = [
-      document.getElementById("step1"),
-      document.getElementById("step2"),
-      document.getElementById("step3"),
-      document.getElementById("step4")
-    ];
-
-
-    steps.forEach(step => {
-
-      step.classList.remove("active", "done");
-
-    });
-
-
-    steps.forEach((step, index) => {
-
-      setTimeout(() => {
-
-        step.classList.add("active");
-
-      }, index * 350);
-
-
-      setTimeout(() => {
-
-        step.classList.remove("active");
-
-        step.classList.add("done");
-
-      }, index * 350 + 300);
-
-    });
-
-  }
-
-
-  /* =========================
-     COPIAR
-  ========================= */
-
-  copyButton.addEventListener(
-    "click",
-    async () => {
-
-      const text =
-        result.innerText.trim();
-
-      try {
-
-        await navigator.clipboard.writeText(text);
-
-        copyButton.textContent =
-          "✅ Copiado para WhatsApp";
-
-        setTimeout(() => {
-
-          copyButton.textContent =
-            "📋 Copiar respuesta para WhatsApp";
-
-        }, 2200);
-
-      } catch {
-
-        mostrarError(
-          "No pudimos copiar automáticamente. Seleccioná el texto manualmente."
-        );
-
-      }
-
-    }
-  );
-
-
-  /* =========================
-     MODAL
-  ========================= */
-
-  ocfeButton.addEventListener(
-    "click",
-    abrirModal
-  );
-
-  closeModal.addEventListener(
-    "click",
-    cerrarModal
-  );
-
-
-  modal.addEventListener(
-    "click",
-    event => {
-
-      if (event.target === modal) {
-        cerrarModal();
-      }
-
-    }
-  );
-
-
-  document.addEventListener(
-    "keydown",
-    event => {
-
-      if (
-        event.key === "Escape" &&
-        !modal.classList.contains("hidden")
-      ) {
-
-        cerrarModal();
-
-      }
-
-    }
-  );
-
-
-  function abrirModal() {
-
-    modal.classList.remove("hidden");
-
-    closeModal.focus();
-
-  }
-
-
-  function cerrarModal() {
-
-    modal.classList.add("hidden");
-
-    ocfeButton.focus();
-
-  }
-
-
-  /* =========================
-     UTILIDADES
-  ========================= */
-
-  function esperar(ms) {
-
-    return new Promise(
-      resolve => setTimeout(resolve, ms)
-    );
-
-  }
-
-
-  function formatear(numero) {
-
-    return new Intl.NumberFormat(
-      "es-AR",
-      {
-        maximumFractionDigits: 2
-      }
-    ).format(numero);
-
-  }
-
-
-  function mostrarError(message) {
-
-    output.classList.remove("hidden");
-
-    loading.classList.add("hidden");
-
-    workflow.classList.add("hidden");
-
-    copyButton.classList.add("hidden");
-
-    result.innerHTML = `
-      <div
-        style="
-          padding:12px;
-          color:#ff9b9b;
-          background:rgba(255,91,91,.08);
-          border:1px solid rgba(255,91,91,.15);
-          border-radius:9px;
-          font-size:.8rem;
-        "
-      >
-        ⚠️ ${message}
+      <div class="stat">
+        <div class="big"><span class="stat-icon">🚀</span>&lt; 5s</div>
+        <div class="cap">TIEMPO PROMEDIO DE RESPUESTA</div>
       </div>
-    `;
+      <div class="stat">
+        <div class="big"><span class="stat-icon">📊</span>100%</div>
+        <div class="cap">REGISTRO EN SHEETS</div>
+      </div>
+    </div>
+  </div>
+</section>
 
-  }
+<footer>
+  <div class="wrap bottom">
+    <span>© 2026 AutoPYME Argentina. Todos los derechos reservados.</span>
+    <span>Cumplimiento Ley 25.326 de Protección de Datos Personales</span>
+  </div>
+</footer>
 
-</script>
+<a href="https://t.me/Autopim_bot" target="_blank" class="fab" aria-label="Hablar con Pimienta por Telegram" title="Hablar con Pimienta">🌶️</a>
 
 </body>
+</html>
 </html>
