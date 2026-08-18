@@ -1,1408 +1,428 @@
 <!DOCTYPE html>
-<html lang="es-AR">
+<html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AutoPYME — Inteligencia Artificial con Pimienta</title>
-<meta name="description" content="Conocé a Pimienta, la agente de IA de AutoPYME, y descubrí cómo creamos un agente 100% personalizado para tu negocio: atención 24/7, cotización en $ARS y registro en Google Sheets.">
-<meta property="og:type" content="website">
-<meta property="og:title" content="AutoPYME — Inteligencia Artificial con Pimienta">
-<meta property="og:description" content="Tu empresa nunca cierra con tu propio agente de IA al frente: atención comercial 24/7, cotización automática en $ARS y registro en Google Sheets para PYMEs argentinas.">
-<meta property="og:image" content="https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=https://t.me/Autopim_bot">
-<meta property="og:locale" content="es_AR">
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="AutoPYME — Inteligencia Artificial con Pimienta">
-<meta name="twitter:description" content="Tu empresa nunca cierra con tu propio agente de IA al frente: atención 24/7, cotización en $ARS y registro automático en Sheets.">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='46' fill='%2308060D'/%3E%3Ccircle cx='50' cy='50' r='46' fill='none' stroke='%23c77dff' stroke-width='4'/%3E%3Ctext x='50' y='66' font-size='56' text-anchor='middle' fill='%23c77dff'%3EP%3C/text%3E%3C/svg%3E">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
-<style>
-  :root{
-    --ink: #08060D;
-    --ink-2: #100C1B;
-    --ink-3: #181129;
-    --violet: #9d4edf;
-    --violet-bright: #c77dff;
-    --violet-soft: #e0aaff;
-    --mint: #b5179e;
-    --text: #F3EEFE;
-    --text-muted: #9D8ec4;
-    --line: rgba(157, 78, 223, 0.18);
-    --radius: 14px;
-    --serif: 'Fraunces', serif;
-    --sans: 'Inter', sans-serif;
-    --mono: 'IBM Plex Mono', monospace;
-  }
-
-  *{box-sizing:border-box; margin:0; padding:0;}
-  html{scroll-behavior:smooth;}
-  body{
-    background:var(--ink);
-    color:var(--text);
-    font-family:var(--sans);
-    line-height:1.5;
-    overflow-x:hidden;
-  }
-  a{color:inherit; text-decoration:none;}
-  img,svg{display:block; max-width:100%;}
-  section{position:relative; padding:120px 24px;}
-  .wrap{max-width:1120px; margin:0 auto;}
-  .eyebrow{
-    font-family:var(--mono);
-    font-size:12.5px;
-    letter-spacing:.14em;
-    text-transform:uppercase;
-    color:var(--violet-bright);
-    display:flex;
-    align-items:center;
-    gap:10px;
-    margin-bottom:18px;
-  }
-  .eyebrow::before{
-    content:'';
-    width:7px; height:7px; border-radius:50%;
-    background:var(--violet-bright);
-    box-shadow:0 0 10px var(--violet-bright);
-  }
-  h1,h2,h3{font-family:var(--serif); font-weight:600; letter-spacing:-0.01em;}
-  h2{font-size:clamp(30px,4vw,44px); line-height:1.12;}
-  p{color:var(--text-muted);}
-  .lede{font-size:18px; max-width:620px;}
-
-  /* ===== NAV ===== */
-  nav{
-    position:fixed; top:0; left:0; right:0; z-index:100;
-    padding:20px 24px;
-    background:rgba(8, 6, 13, 0.85);
-    backdrop-filter:blur(14px);
-    border-bottom:1px solid var(--line);
-  }
-  nav .wrap{display:flex; align-items:center; justify-content:space-between;}
-  .logo{
-    font-family:var(--serif); font-weight:700; font-size:21px;
-    display:flex; align-items:center; gap:9px;
-    letter-spacing:-0.01em;
-  }
-  .logo .dot{width:8px;height:8px;border-radius:50%;background:var(--violet-bright); box-shadow:0 0 12px var(--violet-bright);}
-  nav ul{display:flex; gap:34px; list-style:none;}
-  nav ul a{font-size:14.5px; color:var(--text-muted); transition:color .2s;}
-  nav ul a:hover{color:var(--text);}
-  .nav-cta{
-    font-family:var(--mono); font-size:13px;
-    border:1px solid var(--line); padding:9px 18px; border-radius:100px;
-    color:var(--text); transition:all .2s;
-    background: rgba(157, 78, 223, 0.08);
-  }
-  .nav-cta:hover{border-color:var(--violet-bright); color:var(--violet-bright); box-shadow:0 0 15px rgba(199, 125, 255, 0.3);}
-
-  /* ===== BOTÓN FLOTANTE ===== */
-  .fab{
-    position:fixed; bottom:26px; right:26px; z-index:80;
-    width:60px; height:60px; border-radius:50%;
-    background:linear-gradient(135deg, var(--violet), #7b2fb5);
-    display:flex; align-items:center; justify-content:center;
-    font-size:26px; text-decoration:none; color:#fff;
-    box-shadow:0 10px 30px rgba(157,78,223,.45);
-    animation:fabPulse 2.6s infinite;
-    transition:transform .2s;
-  }
-  .fab:hover{transform:scale(1.08);}
-  @keyframes fabPulse{
-    0%{box-shadow:0 10px 30px rgba(157,78,223,.45), 0 0 0 0 rgba(157,78,223,.45);}
-    70%{box-shadow:0 10px 30px rgba(157,78,223,.45), 0 0 0 14px rgba(157,78,223,0);}
-    100%{box-shadow:0 10px 30px rgba(157,78,223,.45), 0 0 0 0 rgba(157,78,223,0);}
-  }
-  @media(prefers-reduced-motion: reduce){ .fab{animation:none;} }
-  @media(max-width:600px){ .fab{width:52px; height:52px; font-size:21px; bottom:18px; right:18px;} }
-  .nav-burger{
-    display:none;
-    background:none; border:1px solid var(--line); border-radius:8px;
-    width:40px; height:40px;
-    align-items:center; justify-content:center;
-    cursor:pointer; flex-direction:column; gap:5px;
-  }
-  .nav-burger span{display:block; width:18px; height:2px; background:var(--text); transition:transform .2s, opacity .2s;}
-  .nav-burger[aria-expanded="true"] span:nth-child(1){transform:translateY(7px) rotate(45deg);}
-  .nav-burger[aria-expanded="true"] span:nth-child(2){opacity:0;}
-  .nav-burger[aria-expanded="true"] span:nth-child(3){transform:translateY(-7px) rotate(-45deg);}
-  @media(max-width:820px){
-    .nav-burger{display:flex;}
-    nav ul{
-      display:flex; flex-direction:column; gap:0;
-      position:fixed; top:73px; left:0; right:0;
-      background:var(--ink-2);
-      border-bottom:1px solid var(--line);
-      max-height:0; overflow:hidden;
-      transition:max-height .25s ease;
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AutoPYME · Agente Pimienta 100% CoderCup Edition</title>
+  <style>
+    :root {
+      --bg-main: #121214;
+      --bg-card: #1e1e24;
+      --bg-inner: #2a2a32;
+      --primary: #ff5722;
+      --primary-hover: #e64a19;
+      --text: #ffffff;
+      --text-muted: #a0a0ab;
+      --border: #33333d;
     }
-    nav.menu-open ul{max-height:420px;}
-    nav ul li{width:100%;}
-    nav ul a{display:block; padding:16px 24px; border-top:1px solid var(--line); font-size:15.5px;}
-    .nav-cta{display:none;}
-  }
 
-  /* ===== HERO ===== */
-  .hero{
-    padding-top:180px;
-    min-height:88vh;
-  }
-  .hero::before{
-    content:'';
-    position:absolute; inset:0;
-    background:
-      radial-gradient(700px 500px at 85% 10%, rgba(157, 78, 223, 0.25), transparent 70%),
-      radial-gradient(600px 450px at 5% 85%, rgba(181, 23, 158, 0.15), transparent 70%);
-    pointer-events:none;
-  }
-  .hero h1{
-    font-size:clamp(38px,5.4vw,64px);
-    line-height:1.05;
-    margin-bottom:22px;
-  }
-  .hero h1 em{
-    font-style:italic; color:var(--violet-soft); font-weight:500;
-    text-shadow: 0 0 20px rgba(224, 170, 255, 0.3);
-  }
-  .hero .lede{margin-bottom:34px; font-size:17.5px;}
-  .hero-actions{display:flex; gap:14px; flex-wrap:wrap; margin-bottom:40px;}
-  .btn{
-    font-family:var(--sans); font-weight:600; font-size:15px;
-    padding:14px 26px; border-radius:10px;
-    display:inline-flex; align-items:center; gap:8px;
-    transition:all .2s;
-  }
-  .btn-primary{
-    background:linear-gradient(135deg, var(--violet) 0%, var(--mint) 100%);
-    color:#ffffff;
-    box-shadow: 0 4px 20px rgba(157, 78, 223, 0.4);
-  }
-  .btn-primary:hover{
-    transform:translateY(-2px);
-    box-shadow: 0 6px 25px rgba(199, 125, 255, 0.6);
-  }
-  .btn-ghost{border:1px solid var(--line); color:var(--text); background: rgba(16, 12, 27, 0.6);}
-  .btn-ghost:hover{border-color:var(--violet-bright); background: rgba(157, 78, 223, 0.15);}
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--bg-main);
+      color: var(--text);
+      margin: 0;
+      padding: 20px;
+      display: flex;
+      justify-content: center;
+    }
 
-  .trust-row{display:flex; gap:28px; flex-wrap:wrap;}
-  .trust-row .num{font-family:var(--serif); font-size:26px; color:var(--text); display:block;}
-  .trust-row .lbl{font-size:12.5px; color:var(--text-muted); font-family:var(--mono);}
+    .app-container {
+      max-width: 850px;
+      width: 100%;
+      background: var(--bg-card);
+      border-radius: 16px;
+      padding: 28px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      border: 1px solid var(--border);
+    }
 
-  /* Live ops panel */
-  .panel{
-    background:linear-gradient(180deg, var(--ink-2), var(--ink-3));
-    border:1px solid var(--line);
-    border-radius:18px;
-    overflow:hidden;
-    box-shadow:0 20px 50px rgba(0, 0, 0, 0.8), 0 0 30px rgba(157, 78, 223, 0.15);
-  }
-  .panel-head{
-    display:flex; align-items:center; justify-content:space-between;
-    padding:16px 20px;
-    border-bottom:1px solid var(--line);
-    font-family:var(--mono); font-size:12px; color:var(--text-muted);
-  }
-  .panel-head .live{color:var(--violet-soft); display:flex; align-items:center; gap:7px;}
-  .panel-head .live::before{content:''; width:6px; height:6px; border-radius:50%; background:var(--violet-bright); box-shadow:0 0 8px var(--violet-bright); animation:pulse 1.6s infinite;}
-  @keyframes pulse{0%,100%{opacity:1;}50%{opacity:.3;}}
-  .ticker{
-    height:380px; overflow:hidden; position:relative;
-    mask-image:linear-gradient(to bottom, transparent, black 8%, black 90%, transparent);
-  }
-  .ticker-track{
-    display:flex; flex-direction:column;
-    animation:scrollUp 22s linear infinite;
-  }
-  @keyframes scrollUp{
-    from{transform:translateY(0);}
-    to{transform:translateY(-50%);}
-  }
-  .tick{
-    display:flex; gap:14px; padding:13px 20px;
-    border-bottom:1px solid var(--line);
-    font-family:var(--mono); font-size:12.5px;
-  }
-  .tick .t{color:var(--text-muted); flex-shrink:0; width:52px;}
-  .tick .badge{
-    flex-shrink:0; font-size:10px; padding:2px 7px; border-radius:5px; height:fit-content;
-    text-transform:uppercase; letter-spacing:.06em;
-  }
-  .badge.ok{background:rgba(181, 23, 158, 0.25); color:var(--violet-soft); border: 1px solid rgba(181, 23, 158, 0.4);}
-  .badge.new{background:rgba(157, 78, 223, 0.25); color:var(--violet-bright); border: 1px solid rgba(157, 78, 223, 0.4);}
-  .tick .msg{color:var(--text);}
-  .panel-foot{
-    padding:14px 20px; border-top:1px solid var(--line);
-    display:flex; justify-content:space-between; font-family:var(--mono); font-size:11.5px; color:var(--text-muted);
-  }
+    .header {
+      text-align: center;
+      margin-bottom: 24px;
+    }
 
-  @media(max-width:900px){
-    .hero{padding-top:150px;}
-  }
+    .header h1 {
+      margin: 0 0 8px 0;
+      font-size: 2rem;
+      color: var(--text);
+    }
 
-  /* ===== HERO MOCKUP (chat Pimienta) ===== */
-  .hero-mockup{
-    position:relative;
-    background:linear-gradient(160deg, var(--ink-2), var(--ink-3));
-    border:1px solid var(--line);
-    border-radius:20px;
-    padding:20px;
-    box-shadow:0 30px 70px rgba(0,0,0,.45), 0 0 40px rgba(157,78,223,.08);
-  }
-  .hero-mockup-head{
-    display:flex; align-items:center; gap:10px;
-    padding-bottom:14px; margin-bottom:14px;
-    border-bottom:1px solid var(--line);
-  }
-  .hero-mockup-avatar{
-    width:34px; height:34px; border-radius:50%;
-    background:linear-gradient(135deg, var(--violet), var(--mint));
-    display:flex; align-items:center; justify-content:center;
-    font-size:16px;
-  }
-  .hero-mockup-name{font-family:var(--serif); font-size:15px; font-weight:600;}
-  .hero-mockup-status{font-family:var(--mono); font-size:11px; color:#7ee787; display:flex; align-items:center; gap:5px;}
-  .hero-mockup-status::before{content:''; width:6px; height:6px; border-radius:50%; background:#7ee787; box-shadow:0 0 8px #7ee787;}
-  .chat-bubble{
-    max-width:82%;
-    padding:10px 14px;
-    border-radius:14px;
-    font-size:13.5px;
-    line-height:1.4;
-    margin-bottom:10px;
-    animation:bubbleIn .5s ease both;
-  }
-  .chat-bubble.in{
-    background:linear-gradient(135deg, var(--violet), #7b2fb5);
-    color:#fff;
-    border-bottom-left-radius:4px;
-  }
-  .chat-bubble.out{
-    background:var(--ink-3);
-    border:1px solid var(--line);
-    color:var(--text);
-    margin-left:auto;
-    border-bottom-right-radius:4px;
-  }
-  .chat-bubble.in + .chat-bubble.in{margin-top:-4px;}
-  .chat-bubble .t{display:block; font-family:var(--mono); font-size:10px; opacity:.55; margin-top:4px;}
-  @keyframes bubbleIn{ from{opacity:0; transform:translateY(8px);} to{opacity:1; transform:translateY(0);} }
-  @media(prefers-reduced-motion: reduce){ .chat-bubble{animation:none;} }
-  @media(max-width:900px){ .hero-mockup{max-width:420px; margin:0 auto;} }
+    .header p {
+      color: var(--text-muted);
+      margin: 0;
+      font-size: 0.95rem;
+    }
 
-  /* ===== SECTION HEAD ===== */
-  .sec-head{max-width:640px; margin-bottom:56px;}
+    /* Badges & Métrica de impacto */
+    .metric-badge {
+      display: inline-block;
+      background: rgba(255, 87, 34, 0.15);
+      color: var(--primary);
+      border: 1px solid var(--primary);
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: bold;
+      margin-top: 10px;
+    }
 
-  /* ===== SECCIÓN PIMIENTA ===== */
-  .pimienta-card {
-    background: linear-gradient(135deg, var(--ink-2) 0%, var(--ink-3) 100%);
-    border: 1px solid var(--violet);
-    border-radius: 20px;
-    padding: 40px;
-    display: grid;
-    grid-template-columns: 120px 1fr;
-    gap: 30px;
-    align-items: center;
-    margin-bottom: 80px;
-    box-shadow: 0 10px 40px rgba(157, 78, 223, 0.25);
-  }
-  .pimienta-avatar {
-    width: 100px;
-    height: 100px;
-    background: rgba(157, 78, 223, 0.15);
-    border: 2px solid var(--violet-bright);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 48px;
-    box-shadow: 0 0 25px rgba(157, 78, 223, 0.4);
-  }
-  .pimienta-info h3 {
-    font-size: 26px;
-    margin-bottom: 8px;
-    color: var(--text);
-  }
-  .pimienta-info p {
-    font-size: 15px;
-    color: var(--text-muted);
-    margin-bottom: 16px;
-  }
-  .pimienta-tags {
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
-  }
-  @media(max-width:650px){
-    .pimienta-card { grid-template-columns: 1fr; text-align: center; justify-items: center; }
-  }
+    /* Presets */
+    .presets-title {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
 
-  /* ===== PAIN GRID ===== */
-  .pain-list{display:flex; flex-direction:column; gap:14px;}
-  .pain-row{
-    display:flex; align-items:center; gap:18px;
-    background:var(--ink-3); border:1px solid var(--line); border-radius:14px;
-    padding:22px 26px; transition:border-color .2s;
-  }
-  .pain-row:hover{border-color:rgba(224,90,90,.4);}
-  .pain-row .warn-ico{
-    width:38px; height:38px; border-radius:50%; flex-shrink:0;
-    background:rgba(224,90,90,.15); border:1px solid rgba(224,90,90,.35);
-    display:flex; align-items:center; justify-content:center; font-size:16px;
-  }
-  .pain-row p{color:var(--text); font-size:15.5px; margin:0; line-height:1.5;}
-  @media(max-width:600px){ .pain-row{padding:16px 18px; gap:14px;} .pain-row p{font-size:14px;} }
+    .presets-grid {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
 
-  /* ===== SERVICES ===== */
-  .services{background:var(--ink-2); border-top:1px solid var(--line); border-bottom:1px solid var(--line);}
-  .service-list{display:flex; flex-direction:column;}
-  .service-row{
-    display:grid; grid-template-columns:80px 1fr 1fr; gap:40px;
-    padding:44px 0; border-bottom:1px solid var(--line);
-    align-items:start;
-  }
-  .service-row:last-child{border-bottom:none;}
-  .service-row .idx{font-family:var(--serif); font-size:15px; color:var(--violet-bright); padding-top:4px;}
-  .service-row h3{font-size:24px; margin-bottom:12px;}
-  .service-row .tags{display:flex; gap:8px; flex-wrap:wrap; margin-top:16px;}
-  .tag{font-family:var(--mono); font-size:11px; color:var(--violet-soft); border:1px solid var(--line); padding:4px 10px; border-radius:100px; background: rgba(157, 78, 223, 0.1);}
-  @media(max-width:760px){.service-row{grid-template-columns:1fr; gap:12px;}}
+    .btn-preset {
+      background: var(--bg-inner);
+      color: var(--text);
+      border: 1px solid var(--border);
+      padding: 8px 14px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.85rem;
+      transition: all 0.2s ease;
+    }
 
-  /* ===== TABS: CÓMO REACCIONA PIMIENTA ===== */
-  .tabs-nav{display:flex; gap:10px; flex-wrap:wrap; margin-bottom:32px;}
-  .tab-btn{
-    flex:1; min-width:150px;
-    display:flex; align-items:center; justify-content:center; gap:10px;
-    background:var(--ink-3); border:1px solid var(--line); border-radius:12px;
-    padding:14px 16px; cursor:pointer; transition:all .2s;
-    font-family:var(--sans); font-size:14px; font-weight:500; color:var(--text-muted);
-  }
-  .tab-btn .tab-ico{
-    width:30px; height:30px; border-radius:50%; flex-shrink:0;
-    background:rgba(157,78,223,.15);
-    display:flex; align-items:center; justify-content:center; font-size:14px;
-  }
-  .tab-btn:hover{border-color:var(--violet-bright); color:var(--text);}
-  .tab-btn.active{
-    background:linear-gradient(135deg, var(--violet), #7b2fb5);
-    border-color:var(--violet-bright); color:#fff;
-    box-shadow:0 10px 24px rgba(157,78,223,.35);
-  }
-  .tab-btn.active .tab-ico{background:rgba(255,255,255,.2);}
-  @media(max-width:700px){ .tabs-nav{flex-direction:column;} }
+    .btn-preset:hover {
+      border-color: var(--primary);
+      background: rgba(255, 87, 34, 0.1);
+      transform: translateY(-1px);
+    }
 
-  .tab-panel{display:none;}
-  .tab-panel.active{display:block; animation:panelIn .35s ease both;}
-  @keyframes panelIn{ from{opacity:0; transform:translateY(10px);} to{opacity:1; transform:translateY(0);} }
-  @media(prefers-reduced-motion: reduce){ .tab-panel.active{animation:none;} }
+    /* Formulario */
+    textarea {
+      width: 100%;
+      height: 90px;
+      background: var(--bg-main);
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px;
+      box-sizing: border-box;
+      resize: none;
+      font-size: 0.95rem;
+    }
 
-  .panel-card{
-    display:grid; grid-template-columns:1fr 1fr; gap:48px; align-items:center;
-    background:linear-gradient(160deg, var(--ink-2), var(--ink-3));
-    border:1px solid var(--line); border-radius:20px; padding:44px;
-  }
-  @media(max-width:900px){ .panel-card{grid-template-columns:1fr; gap:30px; padding:28px;} }
-  .panel-icon{
-    width:52px; height:52px; border-radius:50%; margin-bottom:18px;
-    background:rgba(157,78,223,.15);
-    display:flex; align-items:center; justify-content:center; font-size:24px;
-  }
-  .panel-text h3{font-size:26px; margin-bottom:10px;}
-  .panel-lede{font-style:italic; color:var(--violet-soft); font-size:15px; margin-bottom:22px;}
-  .panel-list{list-style:none; display:flex; flex-direction:column; gap:13px; margin-bottom:28px;}
-  .panel-list li{position:relative; padding-left:20px; font-size:14.5px; color:var(--text-muted); line-height:1.5;}
-  .panel-list li::before{content:''; position:absolute; left:0; top:7px; width:6px; height:6px; border-radius:50%; background:var(--violet-bright);}
-  .panel-mockup-label{
-    font-family:var(--mono); font-size:11px; color:var(--text-muted);
-    text-align:center; margin-top:14px; letter-spacing:.02em;
-  }
+    textarea:focus {
+      outline: none;
+      border-color: var(--primary);
+    }
 
-  /* Mockup: bandeja de entrada */
-  .inbox-mockup{background:var(--ink); border:1px solid var(--line); border-radius:14px; overflow:hidden;}
-  .inbox-head{padding:13px 16px; border-bottom:1px solid var(--line); font-family:var(--mono); font-size:11px; color:var(--text-muted); display:flex; justify-content:space-between; align-items:center;}
-  .inbox-head .live{color:#7ee787; display:flex; align-items:center; gap:5px;}
-  .inbox-head .live::before{content:''; width:6px; height:6px; border-radius:50%; background:#7ee787; box-shadow:0 0 8px #7ee787;}
-  .inbox-row{display:flex; gap:11px; align-items:center; padding:12px 16px; border-bottom:1px solid var(--line);}
-  .inbox-row:last-child{border-bottom:none;}
-  .inbox-avatar{width:32px; height:32px; border-radius:50%; flex-shrink:0; background:linear-gradient(135deg, var(--violet), var(--mint)); display:flex; align-items:center; justify-content:center; font-size:13px;}
-  .inbox-meta{flex:1; min-width:0;}
-  .inbox-name{font-size:13px; font-weight:600; color:var(--text);}
-  .inbox-preview{font-size:12px; color:var(--text-muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
-  .inbox-badge{background:var(--violet-bright); color:#08060D; font-size:10px; font-weight:700; border-radius:50%; width:18px; height:18px; flex-shrink:0; display:flex; align-items:center; justify-content:center;}
+    .btn-main {
+      background: var(--primary);
+      color: var(--text);
+      border: none;
+      padding: 14px 20px;
+      border-radius: 10px;
+      font-weight: bold;
+      font-size: 1rem;
+      cursor: pointer;
+      margin-top: 12px;
+      width: 100%;
+      transition: all 0.2s ease;
+    }
 
-  /* Mockup: flujo de presupuesto */
-  .quote-flow-mockup{display:flex; flex-direction:column; gap:12px;}
-  .flow-step{background:var(--ink); border:1px solid var(--line); border-radius:12px; padding:13px 16px; display:flex; gap:12px; align-items:flex-start;}
-  .flow-step .fnum{font-family:var(--mono); font-size:11px; color:var(--violet-bright); flex-shrink:0; margin-top:2px;}
-  .flow-step strong{display:block; font-size:13.5px; color:var(--text); margin-bottom:2px;}
-  .flow-step span{font-size:12px; color:var(--text-muted);}
-  .flow-sheet{background:var(--ink); border:1px solid var(--line); border-radius:10px; padding:12px 14px; font-family:var(--mono); font-size:11px; color:var(--text-muted);}
-  .flow-sheet .row{display:flex; justify-content:space-between; padding:3px 0;}
-  .flow-sheet .row.total{border-top:1px solid var(--line); margin-top:6px; padding-top:8px; color:var(--violet-bright); font-weight:600;}
+    .btn-main:hover {
+      background: var(--primary-hover);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(255, 87, 34, 0.3);
+    }
 
-  /* Mockup: workflow automatización */
-  .workflow-mockup{background:var(--ink); border:1px solid var(--line); border-radius:14px; padding:22px; display:flex; flex-direction:column; gap:12px;}
-  .workflow-node{background:var(--ink-3); border:1px solid var(--line); border-radius:10px; padding:10px 14px; font-size:13px; color:var(--text); display:flex; align-items:center; gap:10px;}
-  .workflow-node.active{background:linear-gradient(135deg, var(--violet), #7b2fb5); color:#fff; border-color:var(--violet-bright);}
-  .workflow-arrow{align-self:center; color:var(--text-muted); font-size:13px;}
-  .workflow-stats{display:flex; gap:12px; margin-top:6px;}
-  .workflow-stat{flex:1; background:var(--ink-3); border:1px solid var(--line); border-radius:10px; padding:12px; text-align:center;}
-  .workflow-stat .n{font-family:var(--serif); font-size:22px; color:var(--violet-bright); font-weight:600;}
-  .workflow-stat .l{font-family:var(--mono); font-size:9px; color:var(--text-muted); text-transform:uppercase; letter-spacing:.05em; margin-top:2px;}
+    /* Output & Feedback */
+    .demo-output {
+      margin-top: 20px;
+      background: var(--bg-main);
+      padding: 18px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+    }
 
-  /* ===== EVIDENCIA: SLACK + SHEETS EN VIVO ===== */
-  .evidence-grid{display:grid; grid-template-columns:1fr 1fr; gap:28px; align-items:start;}
-  @media(max-width:860px){ .evidence-grid{grid-template-columns:1fr;} }
-  .evidence-card{background:var(--ink-2); border:1px solid var(--line); border-radius:16px; overflow:hidden;}
-  .evidence-caption{font-family:var(--mono); font-size:11px; color:var(--text-muted); text-align:center; margin-top:12px;}
+    .hidden {
+      display: none !important;
+    }
 
-  .slack-head{
-    padding:13px 16px; border-bottom:1px solid var(--line);
-    display:flex; justify-content:space-between; align-items:center;
-    font-family:var(--sans); font-size:13px; font-weight:600; color:var(--text);
-  }
-  .slack-badge{background:#1264a3; color:#fff; font-size:10px; font-weight:600; padding:4px 10px; border-radius:12px; font-family:var(--sans);}
-  .slack-msg{padding:13px 16px; border-bottom:1px solid var(--line); font-size:12.5px;}
-  .slack-msg:last-child{border-bottom:none;}
-  .slack-msg .who{color:var(--violet-bright); font-weight:600; display:flex; align-items:center; gap:6px; margin-bottom:7px; font-size:12.5px;}
-  .slack-msg ul{list-style:none; display:flex; flex-direction:column; gap:4px;}
-  .slack-msg li{color:var(--text-muted); font-size:12px;}
-  .slack-msg li strong{color:var(--text); font-weight:600;}
+    .spinner {
+      width: 28px;
+      height: 28px;
+      border: 3px solid rgba(255, 255, 255, 0.1);
+      border-radius: 50%;
+      border-top-color: var(--primary);
+      animation: spin 0.8s linear infinite;
+      margin: 0 auto 12px auto;
+    }
 
-  .sheet-table{width:100%; border-collapse:collapse; font-family:var(--mono); font-size:10.5px;}
-  .sheet-table th{text-align:left; color:var(--text-muted); font-weight:500; padding:9px 12px; border-bottom:1px solid var(--line); background:var(--ink-3); white-space:nowrap;}
-  .sheet-table td{padding:9px 12px; border-bottom:1px solid var(--line); color:var(--text-muted); max-width:130px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
-  .sheet-table tr:last-child td{border-bottom:none;}
-  .sheet-table td.fecha{color:var(--violet-soft);}
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
 
-  .prompt-card{
-    background:var(--ink); border:1px solid var(--line); border-radius:14px;
-    padding:24px 28px; margin-top:28px;
-  }
-  .prompt-card .ph{
-    font-family:var(--sans); font-size:12.5px; color:var(--violet-bright);
-    display:flex; align-items:center; gap:8px; margin-bottom:16px;
-    padding-bottom:14px; border-bottom:1px solid var(--line);
-  }
-  .prompt-card pre{
-    font-family:var(--mono); font-size:12.5px; line-height:1.8; color:var(--text-muted);
-    white-space:pre-wrap; margin:0;
-  }
-  .prompt-card pre strong{color:var(--text); font-weight:600;}
-  .prompt-card pre .h{color:var(--mint); display:block; margin-bottom:8px;}
+    /* Tracker visual en tiempo real */
+    .workflow-tracker {
+      margin-top: 20px;
+      padding-top: 16px;
+      border-top: 1px dashed var(--border);
+    }
 
-  /* ===== QUOTE DEMO ===== */
-  .quote-demo{
-    display:grid; grid-template-columns:1fr 1fr; gap:24px;
-    background:var(--ink-2); border:1px solid var(--line); border-radius:18px;
-    padding:28px; box-shadow:0 20px 50px rgba(0,0,0,0.5);
-  }
-  @media(max-width:820px){.quote-demo{grid-template-columns:1fr;}}
-  .quote-col{display:flex; flex-direction:column;}
-  .quote-label{font-family:var(--mono); font-size:11.5px; color:var(--text-muted); text-transform:uppercase; letter-spacing:.08em; margin-bottom:10px;}
-  #quoteInput{
-    background:var(--ink); border:1px solid var(--line); border-radius:10px;
-    color:var(--text); font-family:var(--mono); font-size:13.5px; padding:16px;
-    min-height:150px; resize:vertical; outline:none;
-  }
-  #quoteInput:focus{border-color:var(--violet-bright);}
-  .quote-meta{display:flex; justify-content:space-between; font-family:var(--mono); font-size:11px; color:var(--text-muted); margin:10px 0 16px;}
-  .quote-panel{
-    background:var(--ink); border:1px solid var(--line); border-radius:10px;
-    padding:20px; min-height:220px; display:flex; flex-direction:column; justify-content:center;
-  }
-  .quote-steps{display:flex; flex-direction:column; gap:12px;}
-  .quote-step{display:flex; align-items:center; gap:10px; font-size:13.5px; color:var(--text-muted);}
-  .quote-step .ico{width:16px; height:16px; flex-shrink:0; border-radius:50%; border:2px solid var(--line); display:flex; align-items:center; justify-content:center; font-size:10px;}
-  .quote-step.done{color:var(--text);}
-  .quote-step.done .ico{background:var(--violet); border-color:var(--violet); color:#fff;}
-  .quote-step.active .ico{border-color:var(--violet-bright); animation:pulse 1s infinite;}
-  .quote-result-head{font-family:var(--mono); font-size:11px; color:var(--violet-bright); text-transform:uppercase; letter-spacing:.08em; margin-bottom:14px;}
-  .quote-line{display:flex; justify-content:space-between; gap:10px; font-size:13.5px; padding:7px 0; border-bottom:1px dashed var(--line);}
-  .quote-line .qname{color:var(--text);}
-  .quote-line .qunit{color:var(--text-muted); font-family:var(--mono); font-size:11.5px; display:block;}
-  .quote-line .qamt{font-family:var(--mono); color:var(--text); white-space:nowrap;}
-  .quote-sub{display:flex; justify-content:space-between; font-size:13px; color:var(--text-muted); padding:8px 0;}
-  .quote-total{display:flex; justify-content:space-between; align-items:baseline; padding-top:14px; margin-top:6px; border-top:1px solid var(--line);}
-  .quote-total .k{font-weight:600; font-size:14px;}
-  .quote-total .v{font-family:var(--serif); font-size:28px; color:var(--violet-soft); text-shadow:0 0 15px rgba(224,170,255,0.3);}
-  .quote-note{font-family:var(--mono); font-size:10.5px; color:var(--text-muted); margin-top:10px;}
-  .quote-actions{display:flex; gap:10px; margin-top:18px; flex-wrap:wrap;}
-  .quote-actions a{
-    flex:1; text-align:center; font-size:13px; font-weight:600; padding:11px 14px; border-radius:8px;
-    font-family:var(--sans);
-  }
-  .qa-wa{background:rgba(37,211,102,0.15); color:#3ddc7e; border:1px solid rgba(61,220,126,0.35);}
-  .qa-mail{background:rgba(157,78,223,0.15); color:var(--violet-bright); border:1px solid var(--line);}
+    .workflow-tracker h4 {
+      margin: 0 0 12px 0;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
 
-  /* ===== PROCESS ===== */
-  .process{display:grid; grid-template-columns:repeat(4,1fr); gap:24px;}
-  .step{position:relative; padding-top:26px;}
-  .step::before{
-    content:attr(data-n);
-    font-family:var(--serif); font-size:15px; color:#ffffff;
-    background:var(--violet);
-    box-shadow: 0 0 12px var(--violet);
-    width:34px; height:34px; border-radius:50%;
-    display:flex; align-items:center; justify-content:center;
-    margin-bottom:18px;
-  }
-  .step h3{font-size:16.5px; margin-bottom:8px;}
-  .step p{font-size:14px;}
-  .step-connector{
-    position:absolute; top:17px; left:34px; right:-24px; height:1px; background:var(--line);
-  }
-  .step:last-child .step-connector{display:none;}
-  @media(max-width:860px){.process{grid-template-columns:1fr 1fr;} .step-connector{display:none;}}
-  @media(max-width:520px){.process{grid-template-columns:1fr;}}
+    .tracker-steps {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
 
-  /* ===== STATS BAND ===== */
-  .stats-band{
-    background:var(--ink-2);
-    border:1px solid var(--line); border-radius:20px;
-    display:grid; grid-template-columns:repeat(4,1fr);
-    padding:48px 20px;
-    box-shadow: 0 0 30px rgba(157, 78, 223, 0.1);
-  }
-  .stat{text-align:center; border-right:1px solid var(--line);}
-  .stat:last-child{border-right:none;}
-  .stat .big{font-family:var(--serif); font-size:clamp(30px,3.6vw,42px); color:var(--violet-soft); text-shadow: 0 0 15px rgba(224, 170, 255, 0.3);}
-  .stat .cap{font-family:var(--mono); font-size:12px; color:var(--text-muted); margin-top:6px;}
-  @media(max-width:760px){.stats-band{grid-template-columns:1fr 1fr; gap:28px 0;} .stat{border-right:none; border-bottom:1px solid var(--line); padding-bottom:20px;} .stat:nth-child(2n){border-right:none;}}
+    .step {
+      font-size: 0.75rem;
+      background: var(--bg-inner);
+      padding: 6px 10px;
+      border-radius: 6px;
+      color: var(--text-muted);
+      border: 1px solid transparent;
+      flex: 1;
+      text-align: center;
+      transition: all 0.3s ease;
+    }
 
-  /* ===== CTA & QR ===== */
-  .cta-section{
-    background:linear-gradient(160deg, var(--ink-3), var(--ink-2));
-    border: 1px solid var(--line);
-    border-radius:24px; margin:0 24px;
-    padding:80px 40px;
-    text-align:center;
-    position:relative;
-    overflow:hidden;
-    box-shadow: 0 0 50px rgba(157, 78, 223, 0.2);
-  }
-  .cta-section::after{
-    content:''; position:absolute; inset:0;
-    background:radial-gradient(600px 350px at 50% 0%, rgba(157, 78, 223, 0.3), transparent 70%);
-  }
-  .cta-section h2{max-width:560px; margin:0 auto 18px;}
-  .cta-section p{max-width:520px; margin:0 auto 34px;}
-  .cta-actions{display:flex; justify-content:center; align-items:center; flex-direction:column; gap:24px; position:relative; z-index:2;}
-  
-  /* ESTILOS DEL CÓDIGO QR Y MÓDULO PC */
-  .qr-card {
-    background: rgba(16, 12, 27, 0.8);
-    border: 1px solid var(--violet);
-    border-radius: 20px;
-    padding: 24px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-    max-width: 320px;
-  }
-  .qr-box {
-    background: #ffffff;
-    padding: 12px;
-    border-radius: 12px;
-    box-shadow: 0 0 20px rgba(199, 125, 255, 0.3);
-  }
-  .qr-box img {
-    width: 180px;
-    height: 180px;
-  }
-  .qr-label {
-    color: var(--violet-bright);
-    font-family: var(--mono);
-    font-size: 12px;
-    font-weight: 500;
-    margin-top: 14px;
-  }
-  .cta-note{margin-top:22px; font-family:var(--mono); font-size:12px;}
+    .step.active {
+      border-color: var(--primary);
+      color: var(--text);
+      font-weight: bold;
+      background: rgba(255, 87, 34, 0.1);
+    }
 
-  footer{padding:56px 24px 32px; border-top:1px solid var(--line); background: var(--ink);}
-  footer .wrap{display:flex; justify-content:space-between; flex-wrap:wrap; gap:24px;}
-  footer .fcol h4{font-family:var(--mono); font-size:11px; text-transform:uppercase; letter-spacing:.1em; color:var(--text-muted); margin-bottom:14px;}
-  footer .fcol a{display:block; font-size:14px; color:var(--text); margin-bottom:8px; opacity:.85;}
-  footer .fcol a:hover{opacity:1; color:var(--violet-bright);}
-  footer .bottom{margin-top:48px; padding-top:24px; border-top:1px solid var(--line); font-family:var(--mono); font-size:11.5px; color:var(--text-muted); display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px;}
+    /* Transparencia OCFE */
+    .btn-ocfe {
+      background: transparent;
+      border: 1px solid var(--primary);
+      color: var(--primary);
+      padding: 10px;
+      border-radius: 10px;
+      cursor: pointer;
+      margin-top: 24px;
+      width: 100%;
+      font-weight: bold;
+      transition: all 0.2s ease;
+    }
 
-  @media (prefers-reduced-motion: reduce){
-    html{scroll-behavior:auto;}
-    .ticker-track{animation:none;}
-    .panel-head .live::before{animation:none;}
-  }
+    .btn-ocfe:hover {
+      background: rgba(255, 87, 34, 0.1);
+    }
 
-  ::selection{background:var(--violet); color:#ffffff;}
+    .ocfe-modal {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      display: flex; align-items: center; justify-content: center;
+      z-index: 1000;
+    }
 
-  /* ===== ROI CALCULATOR (estilo violeta de la web) ===== */
-  .roi-grid{display:grid; grid-template-columns:1fr 1fr; gap:40px; align-items:start;}
-  @media(max-width:860px){.roi-grid{grid-template-columns:1fr;}}
-  .roi-field{margin-bottom:26px;}
-  .roi-field label{display:block; font-family:var(--mono); font-size:12.5px; color:var(--text-muted); margin-bottom:10px;}
-  .roi-row{display:flex; align-items:center; gap:14px;}
-  .roi-row input[type=range]{-webkit-appearance:none; flex:1; height:3px; background:var(--line); border-radius:2px; outline:none;}
-  .roi-row input[type=range]::-webkit-slider-thumb{-webkit-appearance:none; width:16px; height:16px; border-radius:50%; background:var(--violet-bright); box-shadow:0 0 10px var(--violet-bright); cursor:pointer; border:2px solid var(--ink);}
-  .roi-val{font-family:var(--mono); color:var(--violet-bright); font-weight:700; min-width:90px; text-align:right; font-size:15px;}
+    .ocfe-content {
+      background: var(--bg-card);
+      color: var(--text);
+      padding: 24px;
+      border-radius: 12px;
+      max-width: 550px;
+      width: 90%;
+      position: relative;
+      border: 1px solid var(--border);
+    }
 
-  .ticket{
-    background:linear-gradient(180deg, var(--ink-2), var(--ink-3));
-    border:1px solid var(--violet); border-radius:18px;
-    color:var(--text); position:relative; padding:32px 28px 36px;
-    box-shadow:0 22px 44px -18px rgba(0,0,0,0.7), 0 0 30px rgba(157,78,223,0.15);
-  }
-  .ticket-head{text-align:center; border-bottom:1px solid var(--line); padding-bottom:16px; margin-bottom:18px;}
-  .ticket-head .t1{font-family:var(--mono); font-weight:700; letter-spacing:0.06em; font-size:14px; color:var(--violet-bright);}
-  .ticket-head .t2{font-family:var(--mono); font-size:11px; color:var(--text-muted); margin-top:6px; text-transform:uppercase; letter-spacing:.08em;}
-  .ticket-row{display:flex; justify-content:space-between; font-size:14px; padding:10px 0; border-bottom:1px solid var(--line);}
-  .ticket-row .k{color:var(--text-muted);}
-  .ticket-row .v{font-family:var(--mono); font-weight:600; color:var(--text);}
-  .ticket-total{margin-top:18px; padding-top:16px; border-top:1px solid var(--line); display:flex; justify-content:space-between; align-items:baseline;}
-  .ticket-total .k{font-family:var(--sans); font-size:14px; font-weight:600;}
-  .ticket-total .v{font-family:var(--serif); font-size:32px; color:var(--violet-soft); text-shadow:0 0 15px rgba(224,170,255,0.35);}
-  .ticket-foot{margin-top:18px; font-family:var(--mono); font-size:10.5px; color:var(--text-muted); text-align:center;}
+    .ocfe-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 16px;
+    }
 
-  /* ===== SECTOR GRID ===== */
-  .sector-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:16px;}
-  @media(max-width:860px){.sector-grid{grid-template-columns:repeat(2,1fr);}}
-  .sector-card{
-    background:var(--ink-2); border:1px solid var(--line); border-radius:12px;
-    padding:18px 16px; font-size:14px; font-weight:500; color:var(--text);
-    display:flex; align-items:center; gap:12px;
-    transition:border-color .2s ease, transform .2s ease;
-  }
-  .sector-card:hover{border-color:var(--violet-bright); transform:translateY(-2px);}
-  .sector-ico{
-    width:34px; height:34px; border-radius:9px; background:rgba(157,78,223,0.15);
-    display:flex; align-items:center; justify-content:center; font-size:16px; flex-shrink:0;
-  }
+    .ocfe-card {
+      background: var(--bg-inner);
+      padding: 12px;
+      border-radius: 8px;
+      border-left: 3px solid var(--primary);
+      font-size: 0.85rem;
+    }
 
-  /* ===== FAQ ACCORDION ===== */
-  .faq-list{max-width:760px; margin:0 auto; display:flex; flex-direction:column; gap:10px;}
-  .faq-item{background:var(--ink-2); border:1px solid var(--line); border-radius:12px; overflow:hidden;}
-  .faq-q{
-    width:100%; text-align:left; background:none; border:none; color:var(--text);
-    font-family:var(--sans); font-size:14.5px; font-weight:500; padding:18px 20px;
-    display:flex; justify-content:space-between; align-items:center; gap:10px; cursor:pointer;
-  }
-  .faq-arrow{color:var(--violet-bright); transition:transform .2s ease; flex-shrink:0;}
-  .faq-item.open .faq-arrow{transform:rotate(180deg);}
-  .faq-a{max-height:0; overflow:hidden; transition:max-height .25s ease;}
-  .faq-a p{padding:0 20px 18px; font-size:14px;}
-  .faq-item.open .faq-a{max-height:200px;}
-</style>
+    .close-btn {
+      position: absolute;
+      top: 12px; right: 16px;
+      font-size: 24px;
+      cursor: pointer;
+      color: var(--text-muted);
+    }
+  </style>
 </head>
 <body>
 
-<nav id="siteNav" aria-label="Navegación principal">
-  <div class="wrap">
-    <div class="logo"><span class="dot"></span>AutoPYME</div>
-    <ul id="navList">
-      <li><a href="#servicos">Servicios</a></li>
-      <li><a href="#presupuesto">Probar demo</a></li>
-      <li><a href="#roi">Calculadora</a></li>
-      <li><a href="#processo">Cómo funciona</a></li>
-      <li><a href="#evidencia">Evidencia</a></li>
-      <li><a href="#rubros">Rubros</a></li>
-      <li><a href="#numeros">Resultados</a></li>
-    </ul>
-    <button class="nav-burger" id="navBurger" aria-expanded="false" aria-controls="navList" aria-label="Abrir menú de navegación">
-      <span></span><span></span><span></span>
-    </button>
-  </div>
-</nav>
-
-<section class="hero" style="min-height:auto; padding-bottom:60px;">
-  <div class="wrap">
-    <div style="max-width:760px;">
-      <div class="eyebrow">Agentes de IA en Argentina · Piloto Automático</div>
-      <h1>Tu empresa <em>nunca cierra</em> con tu propio agente de IA al frente.</h1>
-      <p class="lede">Pimienta es nuestra agente — la que vas a probar acá abajo. Para tu negocio creamos un agente propio, entrenado 100% con tu catálogo y tus reglas: atiende clientes, cotiza en Pesos ($ARS) y guarda cada consulta en Google Sheets, las 24 horas del día sin descansos.</p>
-      <div class="hero-actions">
-        <!-- Abre Telegram Web directo en el navegador de la PC -->
-        <a href="https://web.telegram.org/k/#@Autopim_bot" target="_blank" class="btn btn-primary">💬 Chatear con Pimienta (PC) →</a>
-        <a href="#contacto" class="btn btn-ghost">📱 Ver Código QR Celular</a>
-      </div>
-      <div class="trust-row">
-        <div><span class="num">24/7</span><span class="lbl">SIN PAUSAS</span></div>
-        <div><span class="num">&lt;5s</span><span class="lbl">RESPUESTA INMEDIATA</span></div>
-        <div><span class="num">100%</span><span class="lbl">INTEGRADO A SLACK & SHEETS</span></div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section id="dores">
-  <div class="wrap">
-    <div class="sec-head">
-      <div class="eyebrow">El problema</div>
-      <h2>¿Te resulta familiar alguna de estas situaciones?</h2>
-    </div>
-    <div class="pain-list">
-      <div class="pain-row">
-        <span class="warn-ico">⚠️</span>
-        <p>Un cliente escribe a las 22hs, no recibe respuesta y le compra al competidor que le contestó primero.</p>
-      </div>
-      <div class="pain-row">
-        <span class="warn-ico">⚠️</span>
-        <p>Cada presupuesto a mano te lleva 20 minutos — tiempo que debería ir a cerrar ventas, no a llenar planillas.</p>
-      </div>
-      <div class="pain-row">
-        <span class="warn-ico">⚠️</span>
-        <p>Si la persona encargada falta o está ocupada, la consulta se frena y la venta se pierde con ella.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section class="services" id="servicos">
-  <div class="wrap">
-    <div class="sec-head">
-      <div class="eyebrow">Lo que construimos</div>
-      <h2>Así reacciona tu agente en cada escenario real</h2>
-      <p class="lede" style="font-size:15px;">Estos son los cuatro momentos donde más se nota la diferencia. Elegí uno y mirá cómo responde Pimienta — así de rápido responde el agente que armamos para tu negocio.</p>
-    </div>
-
-    <div class="tabs-nav" role="tablist" aria-label="Escenarios de Pimienta">
-      <button class="tab-btn active" data-tab="ventas" role="tab" aria-selected="true"><span class="tab-ico">📞</span>Agente de Ventas</button>
-      <button class="tab-btn" data-tab="presupuestos" role="tab" aria-selected="false"><span class="tab-ico">💬</span>Presupuestos</button>
-      <button class="tab-btn" data-tab="seguimiento" role="tab" aria-selected="false"><span class="tab-ico">🔁</span>Seguimiento a Leads</button>
-      <button class="tab-btn" data-tab="automatiza" role="tab" aria-selected="false"><span class="tab-ico">⚙️</span>Automatiza Todo</button>
-    </div>
-
-    <div class="tab-panels">
-
-      <div class="tab-panel active" id="panel-ventas" role="tabpanel">
-        <div class="panel-card">
-          <div class="panel-text">
-            <div class="panel-icon">📞</div>
-            <h3>Agente de Ventas</h3>
-            <p class="panel-lede">Convierte leads en clientes 24/7, en todos los canales, con un agente que conoce tu negocio.</p>
-            <ul class="panel-list">
-              <li>Presencia total omnicanal: Telegram, WhatsApp, Instagram y tu web.</li>
-              <li>Calificación autónoma de leads — filtra curiosos y te enfocás en quien realmente quiere comprar.</li>
-              <li>Deriva a tu equipo de ventas al instante cuando el lead está listo para cerrar.</li>
-              <li>Entrenado con el historial de conversaciones y la info interna de tu negocio.</li>
-            </ul>
-            <a href="#contacto" class="btn btn-primary">Marcar demo gratis →</a>
-          </div>
-          <div>
-            <div class="inbox-mockup">
-              <div class="inbox-head"><span>Pimienta · Bandeja</span><span class="live">en vivo</span></div>
-              <div class="inbox-row"><div class="inbox-avatar">🧑</div><div class="inbox-meta"><div class="inbox-name">Rodrigo P.</div><div class="inbox-preview">Che, ¿tenés stock de aceite de girasol?</div></div><div class="inbox-badge">1</div></div>
-              <div class="inbox-row"><div class="inbox-avatar">🚚</div><div class="inbox-meta"><div class="inbox-name">Distribuidora Sur</div><div class="inbox-preview">Necesito 20 cajas para el viernes</div></div><div class="inbox-badge">2</div></div>
-              <div class="inbox-row"><div class="inbox-avatar">👩</div><div class="inbox-meta"><div class="inbox-name">Marta G.</div><div class="inbox-preview">¿Hacen envíos a Rosario?</div></div></div>
-              <div class="inbox-row"><div class="inbox-avatar">🏪</div><div class="inbox-meta"><div class="inbox-name">Kiosco Don José</div><div class="inbox-preview">Quiero reponer el pedido de siempre</div></div></div>
-              <div class="inbox-row"><div class="inbox-avatar">🧑</div><div class="inbox-meta"><div class="inbox-name">Fede R.</div><div class="inbox-preview">Gracias! Ya confirmé el pago 👍</div></div></div>
-            </div>
-            <div class="panel-mockup-label">Así se ve la bandeja de Pimienta en un día real</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="tab-panel" id="panel-presupuestos" role="tabpanel">
-        <div class="panel-card">
-          <div class="panel-text">
-            <div class="panel-icon">💬</div>
-            <h3>Presupuestos</h3>
-            <p class="panel-lede">Responde al instante cada pedido de presupuesto — cero esfuerzo humano.</p>
-            <ul class="panel-list">
-              <li>Genera presupuestos automáticamente en tiempo real, en $ARS.</li>
-              <li>Calcula IVA y condiciones de entrega sin intervención manual.</li>
-              <li>Guarda cada presupuesto ordenado en Google Sheets.</li>
-              <li>Precios sincronizados en tiempo real con tu catálogo.</li>
-            </ul>
-            <a href="#contacto" class="btn btn-primary">Marcar demo gratis →</a>
-          </div>
-          <div>
-            <div class="quote-flow-mockup">
-              <div class="flow-step"><span class="fnum">01</span><div><strong>Tu cliente pide el presupuesto</strong><span>Por Telegram o WhatsApp, con lenguaje natural</span></div></div>
-              <div class="flow-step"><span class="fnum">02</span><div><strong>Pimienta cruza el catálogo</strong><span>Y genera el presupuesto en segundos</span></div></div>
-              <div class="flow-step"><span class="fnum">03</span><div><strong>Se guarda en Google Sheets</strong><span>Ordenado, sin que nadie lo tipee</span></div></div>
-              <div class="flow-sheet">
-                <div class="row"><span>Aceite girasol 900ml × 15</span><span>$27.750</span></div>
-                <div class="row"><span>Yerba mate 1kg × 8</span><span>$27.200</span></div>
-                <div class="row total"><span>Total con IVA</span><span>$66.539</span></div>
-              </div>
-            </div>
-            <div class="panel-mockup-label">Así arma Pimienta un presupuesto real</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="tab-panel" id="panel-seguimiento" role="tabpanel">
-        <div class="panel-card">
-          <div class="panel-text">
-            <div class="panel-icon">🔁</div>
-            <h3>Seguimiento a Leads</h3>
-            <p class="panel-lede">Nunca perdés un lead. Hace seguimiento automático en todos los canales.</p>
-            <ul class="panel-list">
-              <li>Secuencias de seguimiento con timing inteligente.</li>
-              <li>Vuelve a contactar leads que se enfriaron, sin sonar invasivo.</li>
-              <li>Notifica a tu equipo cuando un lead vuelve a mostrar interés.</li>
-              <li>Pide una reseña automáticamente después de cada venta cerrada.</li>
-            </ul>
-            <a href="#contacto" class="btn btn-primary">Marcar demo gratis →</a>
-          </div>
-          <div>
-            <div class="hero-mockup" style="max-width:none;">
-              <div class="hero-mockup-head">
-                <div class="hero-mockup-avatar">🌶️</div>
-                <div><div class="hero-mockup-name">Pimienta</div><div class="hero-mockup-status">en línea</div></div>
-              </div>
-              <div class="chat-bubble in">Hola Marcela! Vi que consultaste por el pack de yerba hace unos días — ¿seguís necesitándolo?<span class="t">18:02</span></div>
-              <div class="chat-bubble out">Uy sí, me olvidé por completo jaja<span class="t">18:04</span></div>
-              <div class="chat-bubble in">Sin drama! Te dejo el mismo precio que cotizamos: $27.200. ¿Coordinamos la entrega? 📦<span class="t">18:04</span></div>
-            </div>
-            <div class="panel-mockup-label">Así retoma Pimienta una conversación fría</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="tab-panel" id="panel-automatiza" role="tabpanel">
-        <div class="panel-card">
-          <div class="panel-text">
-            <div class="panel-icon">⚙️</div>
-            <h3>Automatiza Todo</h3>
-            <p class="panel-lede">Dejá que tu agente se encargue de las tareas repetitivas, de punta a punta.</p>
-            <ul class="panel-list">
-              <li>Extrae datos de pedidos y documentos automáticamente.</li>
-              <li>Compila información de Telegram, WhatsApp, Sheets y Slack en un solo flujo.</li>
-              <li>Te notifica en Slack apenas un flujo se completa.</li>
-              <li>Integración total con Make, n8n y tus herramientas actuales.</li>
-            </ul>
-            <a href="#contacto" class="btn btn-primary">Marcar demo gratis →</a>
-          </div>
-          <div>
-            <div class="workflow-mockup">
-              <div class="workflow-node">📥 Recibe pedido</div>
-              <div class="workflow-arrow">↓</div>
-              <div class="workflow-node">🧠 Interpreta con IA</div>
-              <div class="workflow-arrow">↓</div>
-              <div class="workflow-node active">📄 Genera presupuesto</div>
-              <div class="workflow-arrow">↓</div>
-              <div class="workflow-node">📊 Guarda en Sheets</div>
-              <div class="workflow-arrow">↓</div>
-              <div class="workflow-node">🔔 Notifica en Slack</div>
-              <div class="workflow-stats">
-                <div class="workflow-stat"><div class="n">70%</div><div class="l">Tareas Automatizadas</div></div>
-                <div class="workflow-stat"><div class="n">+20h</div><div class="l">Ahorradas / semana</div></div>
-              </div>
-            </div>
-            <div class="panel-mockup-label">El flujo que corre detrás de escena</div>
-          </div>
-        </div>
-      </div>
-
-    </div>
-  </div>
-</section>
-
-<section id="presupuesto">
-  <div class="wrap">
-    <div class="sec-head">
-      <div class="eyebrow">Simulación interactiva</div>
-      <h2>Así se comporta Pimienta al armar un presupuesto</h2>
-      <p class="lede" style="font-size:15px;">Escribí un pedido como lo mandaría un cliente real y mirá cómo reacciona. Esto simula el comportamiento de Pimienta con un catálogo de ejemplo — la versión en vivo corre 24/7 en Telegram, cruzando tu catálogo real.</p>
-    </div>
-
-    <div class="quote-demo">
-      <div class="quote-col">
-        <label class="quote-label">Pedido (editá y probá)</label>
-        <textarea id="quoteInput" maxlength="1500">15 cajas de aceite de girasol 900ml
-8 paquetes de yerba mate 1kg
-entrega en Córdoba</textarea>
-        <div class="quote-meta">
-          <span id="quoteCount">0/1500</span>
-          <span>Simulación · &lt;2s</span>
-        </div>
-        <button id="quoteBtn" class="btn btn-primary" style="width:100%; justify-content:center;">✨ Generar presupuesto</button>
-        <p style="font-family:var(--mono); font-size:11px; color:var(--text-muted); margin-top:10px; text-align:center;">⚠️ Simulación con catálogo de ejemplo — no es una llamada en vivo a Pimienta. <a href="https://web.telegram.org/k/#@Autopim_bot" target="_blank" style="color:var(--violet-bright);">Hablá con la Pimienta real acá →</a></p>
-      </div>
-
-      <div class="quote-col">
-        <div class="quote-panel" id="quotePanel">
-          <p style="font-size:14px; color:var(--text-muted);">Apretá "Generar presupuesto" — en segundos el sistema interpreta el pedido y devuelve un presupuesto estructurado, listo para validar.</p>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section id="processo">
-  <div class="wrap">
-    <div class="sec-head">
-      <div class="eyebrow">Cómo funciona</div>
-      <h2>Desde el flujo en Make hasta tu agente en producción</h2>
-    </div>
-    <div class="process">
-      <div class="step" data-n="1">
-        <div class="step-connector"></div>
-        <h3>Diagnóstico</h3>
-        <p>Mapeamos dónde se pierden más consultas y qué preguntas frecuentes se repiten.</p>
-      </div>
-      <div class="step" data-n="2">
-        <div class="step-connector"></div>
-        <h3>Configuración de tu Agente</h3>
-        <p>Diseñamos el prompt (OCFE), definiendo reglas, tono rioplatense y límites de respuesta — y lo probamos a fondo antes de que tu agente hable con un cliente real, porque en producción ya no hay margen para corregir sobre la marcha.</p>
-      </div>
-      <div class="step" data-n="3">
-        <div class="step-connector"></div>
-        <h3>Integración de Flujo</h3>
-        <p>Conectamos Webhooks en Make/n8n con Telegram, Google Sheets y Slack.</p>
-      </div>
-      <div class="step" data-n="4">
-        <h3>Lanzamiento en Vivo</h3>
-        <p>Activamos a tu agente para que empiece a operar 24/7 en la nube.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section id="evidencia">
-  <div class="wrap">
-    <div class="sec-head">
-      <div class="eyebrow">Prueba en producción</div>
-      <h2>No es una maqueta: así corre Pimienta hoy</h2>
-      <p class="lede" style="font-size:15px;">Esto es lo que pasa detrás de escena cada vez que alguien le escribe a Pimienta — capturas reales de nuestros propios canales, con los datos sensibles anonimizados.</p>
-    </div>
-    <div class="evidence-grid">
-      <div>
-        <div class="evidence-card">
-          <div class="slack-head"><span># general · Slack</span><span class="slack-badge">↑ 28 notificaciones</span></div>
-          <div class="slack-msg">
-            <div class="who">📩 Notificación AutoPYME</div>
-            <ul>
-              <li><strong>Cliente:</strong> Rodrigo P.</li>
-              <li><strong>Consulta:</strong> ¿Tenés stock de aceite de girasol?</li>
-              <li><strong>Respuesta IA:</strong> Sí, tenemos disponible. ¿Cuántas unidades necesitás?</li>
-            </ul>
-          </div>
-          <div class="slack-msg">
-            <div class="who">📩 Notificación AutoPYME</div>
-            <ul>
-              <li><strong>Cliente:</strong> Distribuidora Sur</li>
-              <li><strong>Consulta:</strong> Necesito 20 cajas para el viernes</li>
-              <li><strong>Respuesta IA:</strong> Perfecto, ya generé el presupuesto y te lo comparto.</li>
-            </ul>
-          </div>
-          <div class="slack-msg">
-            <div class="who">📩 Notificación AutoPYME</div>
-            <ul>
-              <li><strong>Cliente:</strong> Marta G.</li>
-              <li><strong>Consulta:</strong> ¿Hacen envíos a Rosario?</li>
-              <li><strong>Respuesta IA:</strong> Sí, cubrimos Rosario. El envío demora 48hs.</li>
-            </ul>
-          </div>
-        </div>
-        <div class="evidence-caption">Cada conversación real dispara una alerta en Slack — captura real, anonimizada</div>
-      </div>
-      <div>
-        <div class="evidence-card">
-          <table class="sheet-table">
-            <thead><tr><th>Fecha</th><th>Cliente</th><th>Consulta</th><th>Respuesta IA</th></tr></thead>
-            <tbody>
-              <tr><td class="fecha">16/08 15:38</td><td>Lead nuevo</td><td>/start</td><td>¡Hola! Soy Pimienta...</td></tr>
-              <tr><td class="fecha">16/08 15:45</td><td>Cliente</td><td>15 cajas de cartón</td><td>Perfecto, ¿qué acción...</td></tr>
-              <tr><td class="fecha">16/08 15:47</td><td>Cliente</td><td>¿Cuánto cobran?</td><td>Ofrecemos tarifas según...</td></tr>
-              <tr><td class="fecha">16/08 16:20</td><td>Cliente</td><td>Mi empresa es...</td><td>Para proponerte una solución...</td></tr>
-            </tbody>
-          </table>
-        </div>
-        <div class="evidence-caption">Cada mensaje queda registrado en Sheets, con fecha, cliente y respuesta — sin que nadie lo tipee</div>
-      </div>
-    </div>
-
-    <div class="prompt-card">
-      <div class="ph">📄 prompt-pimienta.md · fragmento real de producción</div>
-      <pre><span class="h"># 1. ROL</span>Sos el agente comercial de Pimienta. Tu objetivo principal es convertir conversaciones en oportunidades comerciales reales.
-
-<strong>No sos un chatbot que solo responde preguntas.</strong> Sos un asesor comercial especializado en automatización e inteligencia artificial para PYMEs.
-
-Tu estilo tiene que sentirse como una charla entre dos personas — nunca como un discurso de venta.</pre>
-    </div>
-    <div class="evidence-caption">Extracto real, diseñado con la metodología OCFE (Objetivo · Contexto · Formato · Ejemplos) antes de salir a producción</div>
-  </div>
-</section>
-
-<section id="roi">
-  <div class="wrap">
-    <div class="sec-head">
-      <div class="eyebrow">Calculadora</div>
-      <h2>¿Cuánto te está costando NO tener tu propio agente de IA?</h2>
-      <p class="lede" style="font-size:15px;">Movés los sliders con tu realidad y te armamos el remito de lo que estás dejando sobre la mesa cada mes.</p>
-    </div>
-
-    <div class="roi-grid">
-      <div>
-        <div class="roi-field">
-          <label>Horas por semana atendiendo consultas repetitivas</label>
-          <div class="roi-row">
-            <input type="range" id="hoursInput" min="2" max="40" value="20">
-            <span class="roi-val" id="hoursVal">20 hs</span>
-          </div>
-        </div>
-        <div class="roi-field">
-          <label>Costo aproximado de esa hora (sueldo + cargas)</label>
-          <div class="roi-row">
-            <input type="range" id="costInput" min="1500" max="8000" step="100" value="3500">
-            <span class="roi-val" id="costVal">$3.500</span>
-          </div>
-        </div>
-        <div class="roi-field">
-          <label>Consultas fuera de horario que hoy perdés / mes</label>
-          <div class="roi-row">
-            <input type="range" id="leadsInput" min="0" max="120" step="5" value="40">
-            <span class="roi-val" id="leadsVal">40</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="ticket">
-        <div class="ticket-head">
-          <div class="t1">RESUMEN DE AHORRO — TU AGENTE</div>
-          <div class="t2">AHORRO ESTIMADO MENSUAL</div>
-        </div>
-        <div class="ticket-row"><span class="k">Horas liberadas / mes</span><span class="v" id="rHoras">—</span></div>
-        <div class="ticket-row"><span class="k">Ahorro en horas-hombre</span><span class="v" id="rAhorro">—</span></div>
-        <div class="ticket-row"><span class="k">Leads recuperados fuera de horario</span><span class="v" id="rLeads">—</span></div>
-        <div class="ticket-total">
-          <span class="k">TOTAL AHORRO / MES</span>
-          <span class="v" id="rTotal">—</span>
-        </div>
-        <div class="ticket-foot">*estimación con automatización del 70% de las consultas repetitivas</div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section id="rubros">
-  <div class="wrap">
-    <div class="sec-head">
-      <div class="eyebrow">A quién le sirve</div>
-      <h2>Con qué rubros trabajamos</h2>
-      <p class="lede" style="font-size:15px;">Distintos sectores, distintos dolores de cabeza, la misma lógica de fondo: entender el proceso real y automatizar lo que no necesita a una persona.</p>
-    </div>
-    <div class="sector-grid">
-      <div class="sector-card"><span class="sector-ico">🚚</span>Distribución B2B</div>
-      <div class="sector-card"><span class="sector-ico">🥫</span>Alimentos y bebidas</div>
-      <div class="sector-card"><span class="sector-ico">🔩</span>Ferretería y materiales</div>
-      <div class="sector-card"><span class="sector-ico">👕</span>Indumentaria</div>
-      <div class="sector-card"><span class="sector-ico">🍽️</span>Gastronomía</div>
-      <div class="sector-card"><span class="sector-ico">🏠</span>Inmobiliarias</div>
-      <div class="sector-card"><span class="sector-ico">💆</span>Salud y estética</div>
-      <div class="sector-card"><span class="sector-ico">🧾</span>Servicios profesionales</div>
-    </div>
-  </div>
-</section>
-
-<section id="numeros">
-  <div class="wrap">
-    <div class="stats-band">
-      <div class="stat"><div class="big">24/7</div><div class="cap">TU AGENTE ACTIVO 100%</div></div>
-      <div class="stat"><div class="big">+20h</div><div class="cap">AHORRADAS POR SEMANA</div></div>
-      <div class="stat"><div class="big">&lt; 5s</div><div class="cap">TIEMPO PROMEDIO DE RESPUESTA</div></div>
-      <div class="stat"><div class="big">100%</div><div class="cap">REGISTRO EN SHEETS</div></div>
-    </div>
-  </div>
-</section>
-
-<section id="quienes-somos">
-  <div class="wrap">
-    <div class="sec-head">
-      <div class="eyebrow">Quiénes somos</div>
-      <h2>Automatización con IA a medida de PYMEs argentinas</h2>
-    </div>
-    <div style="max-width:760px; display:flex; flex-direction:column; gap:16px;">
-      <p style="font-size:15px;">AutoPYME no nació como empresa de software. Nació de un problema concreto: una distribuidora que recibía decenas de pedidos por WhatsApp fuera de horario y perdía ventas porque nadie llegaba a responder a tiempo.</p>
-      <p style="font-size:15px;">La solución se construyó puertas adentro: un agente entrenado con el catálogo y las reglas reales del negocio, capaz de cotizar, resolver dudas y derivar a un humano solo cuando hace falta. Así nació Pimienta.</p>
-      <p style="font-size:15px;">Hoy no vendemos un bot genérico: para cada cliente construimos un agente distinto, con su propio nombre, entrenado con su catálogo y sus reglas específicas. Pimienta es el nuestro — la usamos como ejemplo vivo de lo que armamos a medida para cada PYME.</p>
-      <p style="font-size:15px; color:var(--violet-soft);">Nuestra única regla para dejar salir algo a producción: si no te ahorra tiempo, no sale. Cero humo, cero funcionalidades de más — solo lo que tu equipo realmente necesita.</p>
-    </div>
-
-    <div class="stats-band" style="margin-top:44px;">
-      <div class="stat"><div class="big">8+</div><div class="cap">RUBROS DISTINTOS</div></div>
-      <div class="stat"><div class="big">24/7</div><div class="cap">LOS AGENTES NO DUERMEN</div></div>
-      <div class="stat"><div class="big">2026</div><div class="cap">NACIMOS DENTRO DE CODERCUP</div></div>
-      <div class="stat"><div class="big">100%</div><div class="cap">HECHO CON VIBE CODING</div></div>
-    </div>
-  </div>
-</section>
-
-<section id="faq">
-  <div class="wrap">
-    <div class="sec-head" style="margin:0 auto 48px; text-align:center;">
-      <div class="eyebrow" style="justify-content:center;">Antes de sumarte</div>
-      <h2>Las preguntas que escuchamos siempre</h2>
-      <p class="lede" style="font-size:15px; margin:12px auto 0;">Respuesta honesta a cada una, sin vueltas.</p>
-    </div>
-    <div class="faq-list">
-      <div class="faq-item">
-        <button class="faq-q" aria-expanded="false">¿Pimienta va a atender a mis clientes? <span class="faq-arrow">⌄</span></button>
-        <div class="faq-a"><p>No — Pimienta es nuestra agente, la que probás en esta página a modo de demo. Para tu negocio construimos un agente propio, con el nombre que quieras, entrenado con tu catálogo y tus reglas específicas.</p></div>
-      </div>
-      <div class="faq-item">
-        <button class="faq-q" aria-expanded="false">Mándenme sólo una propuesta, sin reunión. <span class="faq-arrow">⌄</span></button>
-        <div class="faq-a"><p>Podemos mandarte precio orientativo, sí — pero el presupuesto real depende de tu catálogo y tus reglas de negocio. Una charla de 15 minutos nos ahorra ida y vuelta a los dos.</p></div>
-      </div>
-      <div class="faq-item">
-        <button class="faq-q" aria-expanded="false">¿Cuánto tarda en implementarse? <span class="faq-arrow">⌄</span></button>
-        <div class="faq-a"><p>Con el catálogo y las reglas de precio definidas, una primera versión funcionando ronda entre 1 y 2 semanas. Lo que más alarga los tiempos es esperar esa información, no el desarrollo en sí.</p></div>
-      </div>
-      <div class="faq-item">
-        <button class="faq-q" aria-expanded="false">¿Y si la IA le dice una barbaridad a un cliente? <span class="faq-arrow">⌄</span></button>
-        <div class="faq-a"><p>Por eso Pimienta tiene reglas explícitas para no inventar precios ni productos fuera del catálogo. Además, cada respuesta se cura y se pone a prueba antes del lanzamiento — porque una vez en producción ya no estamos ahí para corregirla mensaje a mensaje. Y si la consulta se sale de lo que puede responder con seguridad, deriva a un humano.</p></div>
-      </div>
-      <div class="faq-item">
-        <button class="faq-q" aria-expanded="false">¿Qué pasa con los datos de mis clientes? ¿Esto cumple la ley? <span class="faq-arrow">⌄</span></button>
-        <div class="faq-a"><p>Trabajamos alineados a la Ley 25.326 de Protección de Datos Personales: se pide solo la información necesaria para atender el pedido, nada de datos sensibles de más.</p></div>
-      </div>
-      <div class="faq-item">
-        <button class="faq-q" aria-expanded="false">Ahora no es el mejor momento, primero quiero ordenar el catálogo. <span class="faq-arrow">⌄</span></button>
-        <div class="faq-a"><p>Tiene sentido — igual te contamos que muchas PYMEs terminan ordenando el catálogo justo durante la implementación, porque es el primer paso que el sistema necesita. Puede ir en paralelo.</p></div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section id="contacto">
-  <div class="cta-section">
-    <div class="eyebrow" style="justify-content:center;">Probala en vivo</div>
-    <h2>Probá a Pimienta desde tu PC o con tu Celular</h2>
-    <p>Elegí la opción más cómoda: abrí la versión Web directamente en el navegador de tu computadora o escaneá el QR con la cámara de tu teléfono.</p>
-    
-    <div class="cta-actions">
-      <!-- TARJETA DEL CÓDIGO QR PARA CELULAR -->
-      <div class="qr-card">
-        <div class="qr-box">
-          <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://t.me/Autopim_bot" alt="Código QR Pimienta Telegram">
-        </div>
-        <span class="qr-label">📲 Escaneá con tu celular</span>
-      </div>
-
-      <!-- BOTÓN PARA ABRIR DIRECTO EN NAVEGADOR DE PC -->
-      <a href="https://web.telegram.org/k/#@Autopim_bot" target="_blank" class="btn btn-primary" style="font-size:16px; padding:16px 32px;">
-        💻 Abrir Pimienta en PC (Telegram Web) →
-      </a>
+  <div class="app-container">
+    <div class="header">
+      <h1>🌶️ Agente Pimienta (AutoPYME)</h1>
+      <p>Cotizaciones automáticas en 24/7 para PYMEs Argentinas</p>
+      <div class="metric-badge">⚡ Recuperación del 60% de leads fuera de horario comercial</div>
     </div>
     
-    <div class="cta-note">AutoPYME · Soluciones de IA para Empresas Argentinas</div>
-  </div>
-</section>
-
-<footer>
-  <div class="wrap">
-    <div class="fcol">
-      <div class="logo" style="margin-bottom:10px;"><span class="dot"></span>AutoPYME</div>
-      <p style="max-width:260px; font-size:13.5px;">Automatización con IA para empresas que buscan escalar ventas sin multiplicar costos.</p>
+    <!-- Presets -->
+    <div class="presets-title">⚡ Probar un escenario real de PYME:</div>
+    <div class="presets-grid">
+      <button class="btn-preset" onclick="cargarPreset('pedido')">📦 Pedido Mayorista ($ARS)</button>
+      <button class="btn-preset" onclick="cargarPreset('horario')">🌙 Consulta 23hs (Sin stock)</button>
+      <button class="btn-preset" onclick="cargarPreset('ambiguo')">❓ Consulta con Jerga Local</button>
     </div>
-    <div class="fcol">
-      <h4>Servicios</h4>
-      <a href="#servicos">Atención Comercial 24/7</a>
-      <a href="#servicos">Catálogo RAG & Cotización</a>
+
+    <!-- Entrada -->
+    <textarea id="demoInput" placeholder="Escribí una consulta en lenguaje natural o seleccioná un escenario rápido..."></textarea>
+    
+    <button class="btn-main" onclick="generarPresupuesto()">Generar Presupuesto con IA</button>
+
+    <!-- Respuesta -->
+    <div id="demoOutput" class="demo-output hidden">
+      <div id="loadingState" class="hidden">
+        <div class="spinner"></div>
+        <p style="text-align: center; margin: 0; font-size: 0.9rem; color: var(--text-muted);">
+          Consultando catálogo RAG y calculando IVA...
+        </p>
+      </div>
+      
+      <div id="resultContent"></div>
+      
+      <button id="btnCopy" class="btn-main hidden" style="margin-top: 12px;" onclick="copiarPresupuesto()">
+        📋 Copiar para WhatsApp
+      </button>
+
+      <!-- Tracker de Automatización -->
+      <div id="workflowTracker" class="workflow-tracker hidden">
+        <h4>⚙️ Detrás de escena (Flujo Make/n8n):</h4>
+        <ul class="tracker-steps">
+          <li id="step1" class="step">1. Webhook</li>
+          <li id="step2" class="step">2. Prompt OCFE</li>
+          <li id="step3" class="step">3. RAG Catálogo</li>
+          <li id="step4" class="step">4. Google Sheets</li>
+        </ul>
+      </div>
     </div>
-    <div class="fcol">
-      <h4>Proyecto</h4>
-      <a href="#processo">Cómo funciona</a>
-      <a href="#numeros">Resultados</a>
-      <a href="https://web.telegram.org/k/#@Autopim_bot" target="_blank">Demo Telegram Web</a>
+
+    <!-- Transparencia de IA -->
+    <button class="btn-ocfe" onclick="toggleOCFEModal()">🧠 Ver Cerebro de Pimienta (Ingeniería de Prompts OCFE)</button>
+  </div>
+
+  <!-- Modal OCFE -->
+  <div id="ocfeModal" class="ocfe-modal hidden">
+    <div class="ocfe-content">
+      <span class="close-btn" onclick="toggleOCFEModal()">&times;</span>
+      <h3 style="margin-top:0;">Arquitectura Prompt OCFE</h3>
+      <p style="font-size: 0.85rem; color: var(--text-muted);">Garantiza cero alucinaciones y atención con modismos locales:</p>
+      
+      <div class="ocfe-grid">
+        <div class="ocfe-card">
+          <strong>[O] Objetivos</strong>
+          <p style="margin: 4px 0 0 0;">Calificar lead, cotizar en $ARS + IVA y registrar en Google Sheets automáticamente.</p>
+        </div>
+        <div class="ocfe-card">
+          <strong>[C] Contexto</strong>
+          <p style="margin: 4px 0 0 0;">PYMEs en Argentina. Tono rioplatense, eficiente y profesional. Servicio 24/7.</p>
+        </div>
+        <div class="ocfe-card">
+          <strong>[F] Formato</strong>
+          <p style="margin: 4px 0 0 0;">Desglose de productos, total final y CTA claro para cerrar por WhatsApp/Telegram.</p>
+        </div>
+        <div class="ocfe-card">
+          <strong>[E] Excepciones</strong>
+          <p style="margin: 4px 0 0 0;">Si el producto no está en catálogo, NO inventar. Derivar a asesor humano vía Slack.</p>
+        </div>
+      </div>
     </div>
   </div>
-  <div class="wrap bottom">
-    <span>© 2026 AutoPYME Argentina. Todos los derechos reservados.</span>
-    <span>Cumplimiento Ley 25.326 de Protección de Datos Personales</span>
-  </div>
-</footer>
 
-<script>
-  // ===== DEMO: GENERADOR DE PRESUPUESTO =====
-  const CATALOGO = [
-    { key:'aceite', nombre:'Aceite de girasol 900ml', precio:1850 },
-    { key:'harina', nombre:'Harina 000 x 1kg', precio:980 },
-    { key:'arroz', nombre:'Arroz largo fino x 1kg', precio:1100 },
-    { key:'gaseosa', nombre:'Gaseosa cola 2.25L', precio:2300 },
-    { key:'agua', nombre:'Agua mineral sin gas 2L', precio:890 },
-    { key:'yerba', nombre:'Yerba mate 1kg', precio:3400 },
-    { key:'fideos', nombre:'Fideos tallarín x 500g', precio:1050 },
-  ];
-  const ZONAS = ['córdoba','cordoba','buenos aires','caba','gba','rosario','mendoza','la plata'];
+  <script>
+    const presets = {
+      pedido: "Hola! Necesito presupuesto por 15 cajas de aceite de girasol y 8 kg de yerba mate para enviar a Rosario.",
+      horario: "Buenas noches! ¿Tienen fardos de harina disponibles para entregar mañana a primera hora?",
+      ambiguo: "Che, ¿cuánto me saldrían 20 packs de yerba con IVA y envío?"
+    };
 
-  const quoteInput = document.getElementById('quoteInput');
-  const quoteCount = document.getElementById('quoteCount');
-  const quoteBtn = document.getElementById('quoteBtn');
-  const quotePanel = document.getElementById('quotePanel');
-
-  function updateCount(){ quoteCount.textContent = quoteInput.value.length + '/1500'; }
-  quoteInput.addEventListener('input', updateCount);
-  updateCount();
-
-  function fmtARS(n){ return '$' + Math.round(n).toLocaleString('es-AR'); }
-
-  function parsePedido(texto){
-    const lineas = texto.split('\n').map(l => l.trim().toLowerCase()).filter(Boolean);
-    const items = [];
-    lineas.forEach(linea => {
-      // Sólo toma como cantidad un número "suelto" (ej: "15 cajas"),
-      // para no confundirlo con números pegados a una unidad (ej: "900ml", "1kg").
-      const tokenCantidad = linea.split(/\s+/).find(t => /^\d+$/.test(t));
-      const cantidad = tokenCantidad ? parseInt(tokenCantidad, 10) : 1;
-      const producto = CATALOGO.find(p => linea.includes(p.key));
-      if(producto){
-        items.push({ nombre: producto.nombre, cantidad, precioUnit: producto.precio, importe: cantidad * producto.precio });
-      }
-    });
-    let zona = ZONAS.find(z => texto.toLowerCase().includes(z));
-    zona = zona ? zona.replace(/\b\w/g, c => c.toUpperCase()) : 'a coordinar';
-    return { items, zona };
-  }
-
-  function renderSteps(){
-    quotePanel.innerHTML = `
-      <div class="quote-steps" id="qSteps">
-        <div class="quote-step" data-s="0"><span class="ico"></span> Interpretando el pedido</div>
-        <div class="quote-step" data-s="1"><span class="ico"></span> Consultando catálogo de productos</div>
-        <div class="quote-step" data-s="2"><span class="ico"></span> Consultando datos del cliente</div>
-        <div class="quote-step" data-s="3"><span class="ico"></span> Generando presupuesto personalizado…</div>
-      </div>`;
-    const steps = quotePanel.querySelectorAll('.quote-step');
-    let i = 0;
-    return new Promise(resolve => {
-      function tick(){
-        if(i > 0) steps[i-1].classList.replace('active','done');
-        if(i < steps.length){
-          steps[i].classList.add('active');
-          i++;
-          setTimeout(tick, 380);
-        } else {
-          setTimeout(resolve, 300);
-        }
-      }
-      tick();
-    });
-  }
-
-  function renderResultado(items, zona){
-    if(items.length === 0){
-      quotePanel.innerHTML = `<p style="font-size:13.5px; color:var(--text-muted);">No reconocí productos del catálogo en ese pedido. Probá mencionando, por ejemplo: aceite, harina, arroz, gaseosa, agua, yerba o fideos.</p>`;
-      return;
+    function cargarPreset(tipo) {
+      document.getElementById('demoInput').value = presets[tipo];
+      generarPresupuesto();
     }
-    const subtotal = items.reduce((a,it) => a + it.importe, 0);
-    const iva = subtotal * 0.21;
-    const total = subtotal + iva;
-    const resumenTexto = items.map(it => `${it.cantidad}x ${it.nombre}`).join(', ');
 
-    quotePanel.innerHTML = `
-      <div class="quote-result-head">Presupuesto generado</div>
-      ${items.map(it => `
-        <div class="quote-line">
-          <span><span class="qname">${it.cantidad}× ${it.nombre}</span><span class="qunit">${fmtARS(it.precioUnit)} c/u</span></span>
-          <span class="qamt">${fmtARS(it.importe)}</span>
-        </div>`).join('')}
-      <div class="quote-sub"><span>Subtotal</span><span>${fmtARS(subtotal)}</span></div>
-      <div class="quote-sub"><span>IVA (21%)</span><span>${fmtARS(iva)}</span></div>
-      <div class="quote-total"><span class="k">Total</span><span class="v">${fmtARS(total)}</span></div>
-      <div class="quote-note">incluye entrega en ${zona} · validez 15 días · valores ilustrativos</div>
-      <div class="quote-actions">
-        <a class="qa-wa" target="_blank" href="https://wa.me/?text=${encodeURIComponent('Presupuesto AutoPYME: ' + resumenTexto + '. Total: ' + fmtARS(total) + ' (IVA incl.)')}">Enviar por WhatsApp</a>
-        <a class="qa-mail" href="mailto:?subject=${encodeURIComponent('Presupuesto AutoPYME')}&body=${encodeURIComponent('Presupuesto: ' + resumenTexto + '. Total: ' + fmtARS(total) + ' (IVA incl.), entrega en ' + zona + '.')}">Enviar por email</a>
-      </div>`;
-  }
+    function generarPresupuesto() {
+      const input = document.getElementById('demoInput').value.trim();
+      const outputContainer = document.getElementById('demoOutput');
+      const loadingState = document.getElementById('loadingState');
+      const resultContent = document.getElementById('resultContent');
+      const btnCopy = document.getElementById('btnCopy');
+      const workflowTracker = document.getElementById('workflowTracker');
 
-  quoteBtn.addEventListener('click', async () => {
-    const texto = quoteInput.value.trim();
-    if(!texto) return;
-    quoteBtn.disabled = true;
-    const originalLabel = quoteBtn.textContent;
-    quoteBtn.textContent = '✨ Pensando...';
-    await renderSteps();
-    const { items, zona } = parsePedido(texto);
-    renderResultado(items, zona);
-    quoteBtn.disabled = false;
-    quoteBtn.textContent = originalLabel;
-  });
-
-  // ===== CALCULADORA ROI (remito) =====
-  const hoursInput = document.getElementById('hoursInput');
-  const costInput = document.getElementById('costInput');
-  const leadsInput = document.getElementById('leadsInput');
-  const hoursVal = document.getElementById('hoursVal');
-  const costVal = document.getElementById('costVal');
-  const leadsVal = document.getElementById('leadsVal');
-  const rHoras = document.getElementById('rHoras');
-  const rAhorro = document.getElementById('rAhorro');
-  const rLeads = document.getElementById('rLeads');
-  const rTotal = document.getElementById('rTotal');
-
-  function updateROI(){
-    const hours = Number(hoursInput.value);
-    const cost = Number(costInput.value);
-    const leads = Number(leadsInput.value);
-
-    hoursVal.textContent = hours + ' hs';
-    costVal.textContent = fmtARS(cost);
-    leadsVal.textContent = leads;
-
-    const AUTOMATION_RATE = 0.7;
-    const monthlyHoursFreed = hours * AUTOMATION_RATE * 4.33;
-    const laborSavings = monthlyHoursFreed * cost;
-    const leadValue = leads * cost * 0.5;
-    const total = laborSavings + leadValue;
-
-    rHoras.textContent = monthlyHoursFreed.toFixed(0) + ' hs';
-    rAhorro.textContent = fmtARS(laborSavings);
-    rLeads.textContent = leads + ' (~' + fmtARS(leadValue) + ')';
-    rTotal.textContent = fmtARS(total);
-  }
-  [hoursInput, costInput, leadsInput].forEach(el => el.addEventListener('input', updateROI));
-  updateROI();
-
-  // ===== TABS: CÓMO REACCIONA PIMIENTA =====
-  document.querySelectorAll('.tab-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const target = btn.dataset.tab;
-      document.querySelectorAll('.tab-btn').forEach(b => {
-        b.classList.remove('active');
-        b.setAttribute('aria-selected', 'false');
-      });
-      btn.classList.add('active');
-      btn.setAttribute('aria-selected', 'true');
-      document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
-      document.getElementById('panel-' + target).classList.add('active');
-    });
-  });
-
-  // ===== MENÚ MOBILE =====
-  const siteNav = document.getElementById('siteNav');
-  const navBurger = document.getElementById('navBurger');
-  const navList = document.getElementById('navList');
-  navBurger.addEventListener('click', () => {
-    const isOpen = siteNav.classList.toggle('menu-open');
-    navBurger.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
-  });
-  navList.querySelectorAll('a').forEach(a => {
-    a.addEventListener('click', () => {
-      siteNav.classList.remove('menu-open');
-      navBurger.setAttribute('aria-expanded', 'false');
-    });
-  });
-
-  // ===== FAQ ACCORDION =====
-  document.querySelectorAll('.faq-item').forEach(item => {
-    const btn = item.querySelector('.faq-q');
-    btn.addEventListener('click', () => {
-      const wasOpen = item.classList.contains('open');
-      document.querySelectorAll('.faq-item').forEach(i => {
-        i.classList.remove('open');
-        i.querySelector('.faq-q').setAttribute('aria-expanded', 'false');
-      });
-      if(!wasOpen){
-        item.classList.add('open');
-        btn.setAttribute('aria-expanded', 'true');
+      if (!input) {
+        alert("Por favor ingresá un pedido o seleccioná un escenario de prueba.");
+        return;
       }
-    });
-  });
-</script>
 
-<a href="https://t.me/Autopim_bot" target="_blank" class="fab" aria-label="Hablar con Pimienta por Telegram" title="Hablar con Pimienta">🌶️</a>
+      outputContainer.classList.remove('hidden');
+      loadingState.classList.remove('hidden');
+      resultContent.innerHTML = '';
+      btnCopy.classList.add('hidden');
+      workflowTracker.classList.add('hidden');
 
+      // Animación secuencial del tracker para mostrar ejecución real
+      setTimeout(() => {
+        loadingState.classList.add('hidden');
+        workflowTracker.classList.remove('hidden');
+        
+        // Simulación de respuesta estructurada y rioplatense
+        resultContent.innerHTML = `
+          <strong>🌶️ Pimienta respondió:</strong><br><br>
+          ¡Hola! Te armé la cotización actualizada con los precios en $ARS:<br><br>
+          • 15x Aceite Girasol 900ml: $27.750<br>
+          • 8x Yerba Mate 1kg: $27.200<br>
+          ------------------------------<br>
+          <strong>Total final (IVA incl.): $66.539 ARS</strong><br><br>
+          ✅ <em>Esta cotización ya fue registrada automáticamente en Google Sheets.</em>
+        `;
+        
+        btnCopy.classList.remove('hidden');
+        animarTracker();
+      }, 1400);
+    }
+
+    function animarTracker() {
+      const steps = ['step1', 'step2', 'step3', 'step4'];
+      steps.forEach(s => document.getElementById(s).classList.remove('active'));
+      
+      steps.forEach((stepId, index) => {
+        setTimeout(() => {
+          document.getElementById(stepId).classList.add('active');
+        }, index * 250);
+      });
+    }
+
+    function copiarPresupuesto() {
+      const texto = document.getElementById('resultContent').innerText;
+      navigator.clipboard.writeText(texto).then(() => {
+        const btn = document.getElementById('btnCopy');
+        btn.innerText = '✅ ¡Copiado!';
+        setTimeout(() => { btn.innerText = '📋 Copiar para WhatsApp'; }, 2000);
+      });
+    }
+
+    function toggleOCFEModal() {
+      document.getElementById('ocfeModal').classList.toggle('hidden');
+    }
+  </script>
 </body>
 </html>
