@@ -1,4 +1,5 @@
-# AutoPYME
+[README.md](https://github.com/user-attachments/files/31176206/README.md)
+# AutoPYME 🌶️
 
 **Automatización con Inteligencia Artificial para PYMEs argentinas.**
 
