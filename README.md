@@ -1,4 +1,4 @@
-[README.md](https://github.com/user-attachments/files/31258432/README.md)
+[README (1).md](https://github.com/user-attachments/files/31259809/README.1.md)
 # AutoPYME 🌶️
 
 **Automatización con Inteligencia Artificial para PYMEs argentinas.**
@@ -59,8 +59,17 @@ Alineado a la **Ley 25.326 de Protección de Datos Personales** (Argentina). Se 
 ```
 /
 ├── index.html      # Landing page completa (HTML/CSS/JS en un solo archivo)
+├── blueprint.json   # Flujo real de Make (exportado): Telegram → IA → Sheets → Respuesta → Slack
 └── README.md        # Este archivo
 ```
+
+El flujo completo de automatización está documentado en [`blueprint.json`](./blueprint.json) — el export real del escenario de Make que corre Pimienta en producción:
+
+1. **Telegram In** — recibe el mensaje del cliente.
+2. **AI Respuesta** — el agente interpreta la consulta y genera la respuesta (prompt diseñado con metodología OCFE).
+3. **Log Sheets** — guarda la conversación en Google Sheets.
+4. **Responder** — envía la respuesta al cliente por Telegram.
+5. **Aviso Slack** — notifica al equipo en tiempo real.
 
 ## Roadmap
 
