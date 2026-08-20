@@ -1,0 +1,714 @@
+{
+    "name": "AutoPYME Demo - Telegram Ventas",
+    "flow": [
+        {
+            "id": 3,
+            "module": "telegram:WatchUpdates",
+            "version": 1,
+            "parameters": {
+                "__IMTHOOK__": 3549702
+            },
+            "filter": null,
+            "mapper": {},
+            "metadata": {
+                "designer": {
+                    "x": 0,
+                    "y": 0,
+                    "name": "Telegram In"
+                },
+                "restore": {
+                    "parameters": {
+                        "__IMTHOOK__": {
+                            "data": {
+                                "editable": "false"
+                            },
+                            "label": "Pimienta"
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "__IMTHOOK__",
+                        "type": "hook:telegramapi",
+                        "label": "Webhook",
+                        "required": true
+                    }
+                ]
+            }
+        },
+        {
+            "id": 4,
+            "module": "ai-tools:Ask",
+            "version": 2,
+            "parameters": {
+                "model": "global.anthropic.claude-haiku-4-5-20251001-v1:0",
+                "makeConnectionId": 9795673
+            },
+            "mapper": {
+                "input": "Eres \"Pimienta🌶️\", la asistente virtual comercial de AutoPYME.\r\n\r\n## TU OBJETIVO\r\n\r\nTu función es atender potenciales clientes de AutoPYME, responder sus dudas sobre automatización e Inteligencia Artificial, detectar oportunidades comerciales y conseguir sus datos de contacto cuando exista interés real.\r\n\r\nTu objetivo comercial es llevar naturalmente la conversación desde:\r\n\r\nENTENDER → ASESORAR → CALIFICAR → CAPTAR DATOS → DERIVAR AL ASESOR\r\n\r\nLos datos que necesitas conseguir son:\r\n\r\n- Nombre\r\n- Email\r\n- Teléfono/WhatsApp\r\n\r\n## PERSONALIDAD Y TONO\r\n\r\n- Eres Pimienta🌶️, asistente comercial de AutoPYME.\r\n- Sé profesional, cálida, cercana y natural.\r\n- Utiliza español rioplatense/argentino.\r\n- Puedes utilizar expresiones como \"podés\", \"querés\", \"necesitás\" y \"te puedo ayudar\".\r\n- Sé concisa.\r\n- No escribas respuestas demasiado largas.\r\n- No seas insistente.\r\n- No repitas información innecesariamente.\r\n- No inventes precios, servicios, funcionalidades, resultados ni información que no conozcas.\r\n\r\n## SALUDO\r\n\r\nSi el usuario solamente saluda o inicia la conversación:\r\n\r\n\"¡Hola! Soy Pimienta🌶️, la asistente virtual de AutoPYME. ¿En qué puedo ayudarte?\"\r\n\r\nIMPORTANTE:\r\n\r\nSi el usuario ya hizo una pregunta o la conversación ya avanzó:\r\n\r\n- No vuelvas a decir \"Hola\".\r\n- No vuelvas a presentarte.\r\n- No repitas el saludo.\r\n- Responde directamente a su consulta.\r\n\r\n## PRIMERA PRIORIDAD: AYUDAR\r\n\r\nAntes de pedir datos comerciales, intenta entender qué necesita el usuario.\r\n\r\nSi hace una pregunta general, respóndela.\r\n\r\nEjemplo:\r\n\r\nUsuario:\r\n\"¿Qué hacen?\"\r\n\r\nRespuesta:\r\n\"Ayudamos a empresas a automatizar procesos con Inteligencia Artificial, como atención al cliente, ventas y tareas repetitivas. ¿Qué proceso te gustaría automatizar?\"\r\n\r\nNo pidas Nombre, Email y Teléfono todavía si el usuario solamente está haciendo una consulta general.\r\n\r\n## DETECCIÓN DE OPORTUNIDAD COMERCIAL\r\n\r\nConsidera que existe interés comercial cuando el usuario habla de:\r\n\r\n- precios\r\n- costos\r\n- presupuesto\r\n- cotización\r\n- propuesta\r\n- contratar\r\n- servicios\r\n- demo\r\n- reunión\r\n- hablar con un asesor\r\n- automatizar WhatsApp\r\n- automatizar ventas\r\n- automatizar atención al cliente\r\n- automatizar procesos\r\n- implementar IA\r\n- integrar IA\r\n- aplicar IA a su empresa\r\n\r\nCuando detectes una oportunidad:\r\n\r\n1. Responde la consulta si puedes.\r\n2. Si necesitas información adicional para orientar mejor, pregunta brevemente.\r\n3. Luego solicita los datos de contacto de manera natural.\r\n\r\n## SOLICITUD DE DATOS\r\n\r\nCuando el usuario tenga interés comercial, solicita:\r\n\r\nNombre + Email + Teléfono/WhatsApp.\r\n\r\nEjemplo:\r\n\r\n\"Perfecto. Para que un asesor pueda analizar tu caso y prepararte una propuesta, ¿me pasás tu nombre, email y teléfono/WhatsApp?\"\r\n\r\nNO vuelvas a pedir datos que el usuario ya proporcionó.\r\n\r\nEjemplo:\r\n\r\nSi el usuario dice:\r\n\"Soy Juan y mi teléfono es 11 5555-1234.\"\r\n\r\nResponde:\r\n\r\n\"Perfecto, Juan. Ya tengo tu nombre y teléfono. Solo me faltaría tu email para que el asesor pueda contactarte.\"\r\n\r\nSi ya tienes los tres datos:\r\n\r\n- No vuelvas a pedirlos.\r\n- Continúa la conversación normalmente.\r\n- Indica que un asesor podrá contactarlo para avanzar.\r\n\r\n## CALIFICACIÓN DEL LEAD\r\n\r\nCuando sea útil para entender la oportunidad, intenta conocer:\r\n\r\n- Qué quiere automatizar.\r\n- Qué problema tiene actualmente.\r\n- Qué tipo de empresa o actividad tiene.\r\n- Qué resultado busca conseguir.\r\n\r\nNo hagas todas estas preguntas juntas.\r\n\r\nHaz solamente las preguntas necesarias para avanzar.\r\n\r\n## NO PRESIONAR\r\n\r\nNo insistas si el usuario no quiere proporcionar sus datos.\r\n\r\nSi responde que no quiere dejar sus datos:\r\n\r\n\"Entiendo. Si querés, puedo seguir orientándote por acá y cuando estés listo podemos coordinar con un asesor.\"\r\n\r\n## SI EL USUARIO PREGUNTA POR EL PRECIO\r\n\r\nNo inventes precios.\r\n\r\nResponde:\r\n\r\n\"El costo depende del tipo de automatización y de lo que necesites implementar. Si querés, un asesor puede analizar tu caso y prepararte una propuesta personalizada.\"\r\n\r\nDespués solicita los datos si el usuario demuestra interés.\r\n\r\n## SI NO CONOCES LA RESPUESTA\r\n\r\nNo inventes información.\r\n\r\nResponde:\r\n\r\n\"No quiero darte información incorrecta. En ese caso, lo mejor es que un asesor de AutoPYME pueda revisarlo con vos.\"\r\n\r\nSi existe interés comercial, solicita sus datos para que el asesor pueda contactarlo.\r\n\r\n## DATOS DEL MENSAJE ACTUAL\r\n\r\nPara el mensaje: {{3.message.text}}\n\nPara el nombre: {{3.message.from.first_name}}\n\nPara el apellido: {{3.message.from.last_name}}\n## USO DE MEMORIA\r\n\r\nSi el sistema proporciona historial o memoria de conversaciones, utilízalos.\r\n\r\nRecuerda los datos que el usuario ya proporcionó.\r\n\r\nNunca vuelvas a pedir un dato que ya tengas disponible en el historial.\r\n\r\nSi no existe memoria o historial disponible, utiliza solamente la información proporcionada en el mensaje actual.\r\n\r\n## REGLAS IMPORTANTES\r\n\r\n- Nunca inventes información.\r\n- Nunca inventes precios.\r\n- Nunca prometas resultados garantizados.\r\n- Nunca digas que un asesor ya fue contactado si eso no ocurrió realmente.\r\n- Nunca digas que guardaste los datos si el sistema no los guardó.\r\n- Nunca repitas el saludo durante una conversación avanzada.\r\n- No pidas datos comerciales demasiado pronto.\r\n- No hagas demasiadas preguntas en un solo mensaje.\r\n- Mantén las respuestas breves y naturales.\r\n\r\n## RESULTADO ESPERADO\r\n\r\nTu objetivo es convertir una conversación de interés en una oportunidad comercial calificada.\r\n\r\nPrioridad:\r\n\r\n1. Resolver la duda.\r\n2. Detectar interés.\r\n3. Entender la necesidad.\r\n4. Solicitar datos.\r\n5. Facilitar el contacto con un asesor.\r\n"
+            },
+            "metadata": {
+                "designer": {
+                    "x": 300,
+                    "y": 0,
+                    "name": "AI Respuesta"
+                },
+                "restore": {
+                    "parameters": {
+                        "model": {
+                            "mode": "chose",
+                            "label": "Claude Haiku 4.5Fastest lightweight model for simple questions, quick edits, and instant responses",
+                            "nested": []
+                        },
+                        "makeConnectionId": {
+                            "data": {
+                                "scoped": "true",
+                                "connection": "ai-provider"
+                            },
+                            "label": "Make's AI Provider (default)"
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "makeConnectionId",
+                        "type": "account:ai-provider,openai-gpt-3,anthropic-claude,gemini-ai-q9zyjp,ai-agent-foundry-openai,ai-agent-foundry-non-openai,mistral-ai,cohere,groq,ai-agent-xai,amazon-bedrock,ai-agent-openai-compatible",
+                        "label": "Connection",
+                        "required": true
+                    },
+                    {
+                        "name": "model",
+                        "type": "select",
+                        "label": "Model",
+                        "required": true
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "input",
+                        "type": "text",
+                        "label": "Text",
+                        "required": true
+                    }
+                ]
+            }
+        },
+        {
+            "id": 5,
+            "module": "google-sheets:addRow",
+            "version": 2,
+            "parameters": {
+                "__IMTCONN__": 9808991
+            },
+            "mapper": {
+                "mode": "fromAll",
+                "values": {
+                    "0": "{{formatDate(now; \"YYYY-MM-DD HH:mm:ss\"; \"America/Argentina/Buenos_Aires\")}}",
+                    "1": "{{ifempty(3.message.chat.id; ifempty(3.edited_message.chat.id; emptystring))}}",
+                    "2": "{{ifempty(3.message.from.username; ifempty(3.edited_message.from.username; emptystring))}}",
+                    "3": "{{ifempty(3.message.text; ifempty(3.edited_message.text; ifempty(3.channel_post.text; emptystring)))}}",
+                    "4": "{{4.answer}}",
+                    "5": "{{executionId}}"
+                },
+                "sheetId": "Hoja 1",
+                "spreadsheetId": "1mN-b2AJKaSO_uQt32BuCtk4q9sdFtaCqu3z8oZnvnDg",
+                "includesHeaders": true,
+                "insertDataOption": "INSERT_ROWS",
+                "useColumnHeaders": false,
+                "valueInputOption": "USER_ENTERED",
+                "insertUnformatted": false
+            },
+            "metadata": {
+                "designer": {
+                    "x": 600,
+                    "y": 0,
+                    "name": "Log Sheets"
+                },
+                "restore": {
+                    "expect": {
+                        "mode": {
+                            "label": "Select from all"
+                        },
+                        "values": {
+                            "collapsed": true
+                        },
+                        "sheetId": {
+                            "mode": "chose",
+                            "label": "Hoja 1",
+                            "collapsed": true
+                        },
+                        "includesHeaders": {
+                            "label": "Yes",
+                            "collapsed": true
+                        },
+                        "insertDataOption": {
+                            "mode": "chose",
+                            "label": "Insert rows"
+                        },
+                        "useColumnHeaders": {
+                            "label": "No",
+                            "collapsed": true
+                        },
+                        "valueInputOption": {
+                            "mode": "chose",
+                            "label": "User entered"
+                        },
+                        "insertUnformatted": {
+                            "mode": "chose",
+                            "collapsed": true
+                        }
+                    },
+                    "parameters": {
+                        "__IMTCONN__": {
+                            "data": {
+                                "scoped": "true",
+                                "connection": "google"
+                            },
+                            "label": "Natalia's Google connection (ncuello.m@gmail.com)"
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "__IMTCONN__",
+                        "type": "account:google",
+                        "label": "Connection",
+                        "required": true
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "mode",
+                        "type": "select",
+                        "label": "Search Method",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                "select",
+                                "fromAll",
+                                "map"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "insertUnformatted",
+                        "type": "boolean",
+                        "label": "Unformatted",
+                        "required": true
+                    },
+                    {
+                        "name": "valueInputOption",
+                        "type": "select",
+                        "label": "Value input option",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                "USER_ENTERED",
+                                "RAW"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "insertDataOption",
+                        "type": "select",
+                        "label": "Insert data option",
+                        "validate": {
+                            "enum": [
+                                "INSERT_ROWS",
+                                "OVERWRITE"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "spreadsheetId",
+                        "type": "text",
+                        "label": "Spreadsheet ID",
+                        "required": true
+                    },
+                    {
+                        "name": "sheetId",
+                        "type": "select",
+                        "label": "Sheet Name",
+                        "required": true
+                    },
+                    {
+                        "name": "includesHeaders",
+                        "type": "select",
+                        "label": "Table contains headers",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                true,
+                                false
+                            ]
+                        }
+                    },
+                    {
+                        "name": "useColumnHeaders",
+                        "type": "select",
+                        "label": "Use column headers as IDs of the columns",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                true,
+                                false
+                            ]
+                        }
+                    },
+                    {
+                        "name": "values",
+                        "spec": [
+                            {
+                                "name": "0",
+                                "type": "text",
+                                "label": "FECHA (A)"
+                            },
+                            {
+                                "name": "1",
+                                "type": "text",
+                                "label": "ID Chat (B)"
+                            },
+                            {
+                                "name": "2",
+                                "type": "text",
+                                "label": "Usuario (C)"
+                            },
+                            {
+                                "name": "3",
+                                "type": "text",
+                                "label": "Mensaje (D)"
+                            },
+                            {
+                                "name": "4",
+                                "type": "text",
+                                "label": "Respuesta (E)"
+                            },
+                            {
+                                "name": "5",
+                                "type": "text",
+                                "label": "(F)"
+                            },
+                            {
+                                "name": "6",
+                                "type": "text",
+                                "label": "(G)"
+                            },
+                            {
+                                "name": "7",
+                                "type": "text",
+                                "label": "(H)"
+                            },
+                            {
+                                "name": "8",
+                                "type": "text",
+                                "label": "(I)"
+                            },
+                            {
+                                "name": "9",
+                                "type": "text",
+                                "label": "(J)"
+                            },
+                            {
+                                "name": "10",
+                                "type": "text",
+                                "label": "(K)"
+                            },
+                            {
+                                "name": "11",
+                                "type": "text",
+                                "label": "(L)"
+                            },
+                            {
+                                "name": "12",
+                                "type": "text",
+                                "label": "(M)"
+                            },
+                            {
+                                "name": "13",
+                                "type": "text",
+                                "label": "(N)"
+                            },
+                            {
+                                "name": "14",
+                                "type": "text",
+                                "label": "(O)"
+                            },
+                            {
+                                "name": "15",
+                                "type": "text",
+                                "label": "(P)"
+                            },
+                            {
+                                "name": "16",
+                                "type": "text",
+                                "label": "(Q)"
+                            },
+                            {
+                                "name": "17",
+                                "type": "text",
+                                "label": "(R)"
+                            },
+                            {
+                                "name": "18",
+                                "type": "text",
+                                "label": "(S)"
+                            },
+                            {
+                                "name": "19",
+                                "type": "text",
+                                "label": "(T)"
+                            },
+                            {
+                                "name": "20",
+                                "type": "text",
+                                "label": "(U)"
+                            },
+                            {
+                                "name": "21",
+                                "type": "text",
+                                "label": "(V)"
+                            },
+                            {
+                                "name": "22",
+                                "type": "text",
+                                "label": "(W)"
+                            },
+                            {
+                                "name": "23",
+                                "type": "text",
+                                "label": "(X)"
+                            },
+                            {
+                                "name": "24",
+                                "type": "text",
+                                "label": "(Y)"
+                            },
+                            {
+                                "name": "25",
+                                "type": "text",
+                                "label": "(Z)"
+                            }
+                        ],
+                        "type": "collection",
+                        "label": "Values in columns",
+                        "metadata": [
+                            [
+                                [
+                                    "FECHA",
+                                    "ID Chat",
+                                    "Usuario",
+                                    "Mensaje",
+                                    "Respuesta"
+                                ]
+                            ]
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "id": 6,
+            "module": "telegram:SendReplyMessage",
+            "version": 1,
+            "parameters": {
+                "__IMTCONN__": 9806592
+            },
+            "mapper": {
+                "text": "{{4.answer}}",
+                "chatId": "{{ifempty(3.message.chat.id; ifempty(3.edited_message.chat.id; emptystring))}}",
+                "parseMode": "",
+                "replyMarkup": "",
+                "messageThreadId": "",
+                "replyToMessageId": "",
+                "disableNotification": false,
+                "disableWebPagePreview": true,
+                "replyMarkupAssembleType": "reply_markup_enter"
+            },
+            "metadata": {
+                "designer": {
+                    "x": 900,
+                    "y": 0,
+                    "name": "Responder"
+                },
+                "restore": {
+                    "expect": {
+                        "parseMode": {
+                            "label": "Empty"
+                        },
+                        "disableNotification": {
+                            "mode": "chose"
+                        },
+                        "replyMarkupAssembleType": {
+                            "label": "Enter the Reply Markup"
+                        }
+                    },
+                    "parameters": {
+                        "__IMTCONN__": {
+                            "data": {
+                                "scoped": "true",
+                                "connection": "telegram"
+                            },
+                            "label": "Natalia's Telegram Bot connection"
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "__IMTCONN__",
+                        "type": "account:telegram",
+                        "label": "Connection",
+                        "required": true
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "chatId",
+                        "type": "text",
+                        "label": "Chat ID",
+                        "required": true
+                    },
+                    {
+                        "name": "text",
+                        "type": "text",
+                        "label": "Text",
+                        "required": true
+                    },
+                    {
+                        "name": "messageThreadId",
+                        "type": "number",
+                        "label": "Message Thread ID"
+                    },
+                    {
+                        "name": "parseMode",
+                        "type": "select",
+                        "label": "Parse Mode",
+                        "validate": {
+                            "enum": [
+                                "Markdown",
+                                "HTML"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "disableNotification",
+                        "type": "boolean",
+                        "label": "Disable Notifications"
+                    },
+                    {
+                        "name": "disableWebPagePreview",
+                        "type": "boolean",
+                        "label": "Disable Link Previews"
+                    },
+                    {
+                        "name": "replyToMessageId",
+                        "type": "number",
+                        "label": "Original Message ID"
+                    },
+                    {
+                        "name": "replyMarkupAssembleType",
+                        "type": "select",
+                        "label": "Enter/Assemble the Reply Markup Field",
+                        "validate": {
+                            "enum": [
+                                "reply_markup_enter",
+                                "reply_markup_assemble"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "replyMarkup",
+                        "type": "text",
+                        "label": "Reply Markup"
+                    }
+                ]
+            }
+        },
+        {
+            "id": 7,
+            "module": "slack:CreateMessage",
+            "version": 4,
+            "parameters": {
+                "__IMTCONN__": 9808034
+            },
+            "mapper": {
+                "text": "📩 *Notificación AutoPYME*\r\n• Cliente: {{6.chat.first_name}}{{6.chat.last_name}}\r\n• Consulta: {{6.text}}\r\n• Respuesta IA: {{4.answer}}",
+                "parse": false,
+                "mrkdwn": true,
+                "channel": "C0BQ4EB1R4K",
+                "channelType": "public",
+                "channelWType": "list"
+            },
+            "metadata": {
+                "designer": {
+                    "x": 1200,
+                    "y": 0,
+                    "name": "Aviso Slack"
+                },
+                "restore": {
+                    "expect": {
+                        "parse": {
+                            "mode": "chose"
+                        },
+                        "mrkdwn": {
+                            "mode": "chose"
+                        },
+                        "channel": {
+                            "mode": "chose",
+                            "label": "general"
+                        },
+                        "link_names": {
+                            "mode": "chose"
+                        },
+                        "channelType": {
+                            "label": "Public channel"
+                        },
+                        "channelWType": {
+                            "label": "Select from the list"
+                        },
+                        "unfurl_links": {
+                            "mode": "chose"
+                        },
+                        "unfurl_media": {
+                            "mode": "chose"
+                        },
+                        "reply_broadcast": {
+                            "mode": "chose"
+                        }
+                    },
+                    "parameters": {
+                        "__IMTCONN__": {
+                            "data": {
+                                "scoped": "true",
+                                "connection": "slack3"
+                            },
+                            "label": "Natalia's Slack (bot) connection (autopymeespacio.slack.com - make)"
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "__IMTCONN__",
+                        "type": "account:slack2,slack3",
+                        "label": "Connection",
+                        "required": true
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "channelWType",
+                        "type": "select",
+                        "label": "Enter a channel ID or name",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                "manualy",
+                                "list"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "text",
+                        "type": "text",
+                        "label": "Text"
+                    },
+                    {
+                        "name": "blocks",
+                        "type": "text",
+                        "label": "Blocks"
+                    },
+                    {
+                        "name": "thread_ts",
+                        "type": "text",
+                        "label": "Thread message ID (time stamp)"
+                    },
+                    {
+                        "name": "reply_broadcast",
+                        "type": "boolean",
+                        "label": "Reply broadcast"
+                    },
+                    {
+                        "name": "link_names",
+                        "type": "boolean",
+                        "label": "Link names"
+                    },
+                    {
+                        "name": "parse",
+                        "type": "boolean",
+                        "label": "Parse message text"
+                    },
+                    {
+                        "name": "mrkdwn",
+                        "type": "boolean",
+                        "label": "Use markdown"
+                    },
+                    {
+                        "name": "unfurl_links",
+                        "type": "boolean",
+                        "label": "Unfurl primarily text-based content"
+                    },
+                    {
+                        "name": "unfurl_media",
+                        "type": "boolean",
+                        "label": "Unfurl media content"
+                    },
+                    {
+                        "name": "icon_emoji",
+                        "type": "text",
+                        "label": "Icon emoji"
+                    },
+                    {
+                        "name": "icon_url",
+                        "type": "url",
+                        "label": "Icon url"
+                    },
+                    {
+                        "name": "username",
+                        "type": "text",
+                        "label": "User name"
+                    },
+                    {
+                        "name": "channelType",
+                        "type": "select",
+                        "label": "Channel type",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                "public",
+                                "private",
+                                "im",
+                                "mpim"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "channel",
+                        "type": "select",
+                        "label": "Public channel",
+                        "required": true
+                    }
+                ]
+            }
+        }
+    ],
+    "metadata": {
+        "instant": true,
+        "version": 1,
+        "scenario": {
+            "roundtrips": 1,
+            "maxErrors": 3,
+            "autoCommit": true,
+            "autoCommitTriggerLast": true,
+            "sequential": false,
+            "slots": null,
+            "confidential": false,
+            "dataloss": false,
+            "dlq": false,
+            "freshVariables": false
+        },
+        "designer": {
+            "orphans": []
+        },
+        "zone": "eu1.make.com",
+        "notes": []
+    }
+}
